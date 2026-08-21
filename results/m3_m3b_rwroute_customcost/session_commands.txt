@@ -1,0 +1,50 @@
+gradlew.bat jar
+set RWROUTE_FORBIDDEN_TILES=INT_X14Y88,INT_X14Y89,INT_X14Y90,INT_X15Y89,INT_X15Y90
+"C:\AMDDesignTools\2026.1\Vivado\tps\win64\jre24.0.2_12\bin\java.exe" -cp "C:\vivado_work\milestone0\RapidWright-master\build\libs\rapidwright.jar;C:\rapidwright\rapidwright-2026.1.0-standalone-win64.jar" com.xilinx.rapidwright.rwroute.RWRoute C:\vivado_work\milestone0\and_gadget_xczu2_wired.dcp C:\vivado_work\milestone0\and_gadget_xczu2_hardexcl_routed.dcp --nonTimingDriven
+cd C:\vivado_work\milestone0\RapidWright-master
+copy /Y "C:\path\to\wherever_you_saved\RWRoute.java" src\com\xilinx\rapidwright\rwroute\RWRoute.java
+gradlew.bat jar
+set RWROUTE_FORBIDDEN_TILES=INT_X14Y88,INT_X14Y89,INT_X14Y90,INT_X15Y89,INT_X15Y90
+"C:\AMDDesignTools\2026.1\Vivado\tps\win64\jre24.0.2_12\bin\java.exe" -cp "C:\vivado_work\milestone0\RapidWright-master\build\libs\rapidwright.jar;C:\rapidwright\rapidwright-2026.1.0-standalone-win64.jar" com.xilinx.rapidwright.rwroute.RWRoute C:\vivado_work\milestone0\and_gadget_xczu2_wired.dcp C:\vivado_work\milestone0\and_gadget_xczu2_hardexcl_routed.dcp --nonTimingDriven
+cd C:\vivado_work\milestone0
+"C:\Users\krss\AppData\Local\Programs\Python\Python314\python.exe" switchbox_conflict_detector.py and_gadget_xczu2_hardexcl_routed.dcp --jar %RAPIDWRIGHT_JAR%
+type switchbox_conflicts.csv
+cd C:\vivado_work\milestone0\RapidWright-master
+REM copy the new RWRoute.java you just downloaded into the source tree first,
+REM then confirm the build actually succeeds before doing anything else
+gradlew.bat jar
+set RWROUTE_FORBIDDEN_TILES=INT_X14Y88,INT_X14Y89,INT_X14Y90,INT_X15Y89,INT_X15Y90
+"C:\AMDDesignTools\2026.1\Vivado\tps\win64\jre24.0.2_12\bin\java.exe" -cp "C:\vivado_work\milestone0\RapidWright-master\build\libs\rapidwright.jar;C:\rapidwright\rapidwright-2026.1.0-standalone-win64.jar" com.xilinx.rapidwright.rwroute.RWRoute C:\vivado_work\milestone0\and_gadget_xczu2_wired.dcp C:\vivado_work\milestone0\and_gadget_xczu2_hardexcl_diag_routed.dcp --nonTimingDriven
+"C:\Users\krss\AppData\Local\Programs\Python\Python314\python.exe" switchbox_conflict_detector.py and_gadget_xczu2_hardexcl_diag_routed.dcp --jar %RAPIDWRIGHT_JAR%
+type switchbox_conflicts.csv
+"C:\Users\krss\AppData\Local\Programs\Python\Python314\python.exe" switchbox_conflict_detector.py and_gadget_xczu2_hardexcl_diag_routed.dcp --jar %RAPIDWRIGHT_JAR%
+type switchbox_conflicts.csv
+cd C:\vivado_work\milestone0
+"C:\Users\krss\AppData\Local\Programs\Python\Python314\python.exe" switchbox_conflict_detector.py and_gadget_xczu2_hardexcl_diag_routed.dcp --jar %RAPIDWRIGHT_JAR%
+type switchbox_conflicts.csv
+cd C:\vivado_work\milestone0
+"C:\Users\krss\AppData\Local\Programs\Python\Python314\python.exe" api_probe.py and_gadget_xczu2_hardexcl_diag_routed.dcp --jar %RAPIDWRIGHT_JAR%
+cd C:\vivado_work\milestone0
+"C:\Users\krss\AppData\Local\Programs\Python\Python314\python.exe" switchbox_conflict_detector.py and_gadget_xczu2_hardexcl_diag_routed.dcp --jar %RAPIDWRIGHT_JAR%
+type switchbox_conflicts.csv
+cd C:\vivado_work\milestone0
+dir switchbox_conflict_detector.py
+copy /Y "C:\Users\krss\Downloads\switchbox_conflict_detector.py" "C:\vivado_work\milestone0\switchbox_conflict_detector.py"
+"C:\Users\krss\AppData\Local\Programs\Python\Python314\python.exe" switchbox_conflict_detector.py and_gadget_xczu2_hardexcl_diag_routed.dcp --jar %RAPIDWRIGHT_JAR%
+type switchbox_conflicts.csv
+cd C:\vivado_work\milestone0
+dir switchbox_conflict_detector.py
+copy /Y "C:\Users\krss\Downloads\switchbox_conflict_detector.py" "C:\vivado_work\milestone0\switchbox_conflict_detector.py"
+"C:\Users\krss\AppData\Local\Programs\Python\Python314\python.exe" switchbox_conflict_detector.py and_gadget_xczu2_hardexcl_diag_routed.dcp --jar %RAPIDWRIGHT_JAR%
+type switchbox_conflicts.csv
+"C:\Users\krss\AppData\Local\Programs\Python\Python314\python.exe" switchbox_conflict_detector.py and_gadget_xczu2_routed.dcp --jar %RAPIDWRIGHT_JAR%
+type switchbox_conflicts.csv > baseline_conflicts.csv
+copy switchbox_conflicts.csv baseline_conflicts.csv
+y
+"C:\Users\krss\AppData\Local\Programs\Python\Python314\python.exe" switchbox_conflict_detector.py and_gadget_xczu2_customcost_routed2.dcp --jar %RAPIDWRIGHT_JAR%
+copy /Y switchbox_conflicts.csv softpenalty_conflicts.csv
+ipconfig > C:\Users\krss\Desktop\network_info.txt
+systeminfo > report.txt | type report.txt
+ipconfig > output.txt
+systeminfo > report.txt && type report.txt
+doskey /history > session_commands.txt

@@ -1,0 +1,22 @@
+{
+  "dcp": ".\\and_gadget_xczu2_v5_routed.dcp",
+  "method": "switch_box_conflict_detector (Milestone 1)",
+  "net_classification": {
+    "total_nets": 4,
+    "share0_only": 2,
+    "share1_only": 2,
+    "cross_share_expected": 0,
+    "unmatched_no_share_tag": 0
+  },
+  "diagnostics": {
+    "zero_pip_net_count": 0,
+    "note": "zero_pip_net_count counts nets with no PIPs recorded (commonly intra-SLICE/intra-site connections that don't leave the site, or genuinely unrouted nets -- inspect zero_pip_nets.csv before trusting the conflict count if this number is unexpectedly high relative to total_nets)."
+  },
+  "tiles_used_total": 63,
+  "cross_share_switch_box_conflicts": {
+    "count": 2,
+    "open_fabric_count": 0,
+    "co_located_terminal_count": 2,
+    "note": "Each entry is a CANDIDATE coupling-leakage site: a share-0-only net and a share-1-only net were both routed through the same tile (switch box). This is a risk indicator per the worst-case switch-box coupling model (Mueller et al. 2026), NOT a formally verified leak -- no PROLEAD-style probing-security evaluation has been run. See module docstring for full scope limitations. IMPORTANT: 'count' includes BOTH conflict_type values. 'open_fabric_count' is the subset where both nets merely pass through the shared tile -- these are the genuine candidate-leak sites the coupling model targets. 'co_located_terminal_count' is the subset where the shared tile is a physical SOURCE/SINK tile for BOTH nets (e.g. two share-tagged nets that both terminate at the same cross-share gadget cell) -- these are not open-fabric coupling events and cannot be avoided by any routing strategy, since a cell's own site does not move. Treat open_fabric_count as the number that matters for routing-mitigation experiments; co_located_terminal_count reflects the gadget's own designed cross-share structure."
+  }
+}

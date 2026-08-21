@@ -1,0 +1,3 @@
+tile,share0_net,share1_net,conflict_type
+INT_X25Y179,b_sh0_net,a_sh1_net,co_located_terminal
+INT_X5Y8,a_sh0_net,b_sh1_net,co_located_terminal
