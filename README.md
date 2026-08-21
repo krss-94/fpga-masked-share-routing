@@ -404,13 +404,13 @@ This repository was reconstructed from an audit of the original project archive.
 If you use or reference this work, please cite:
 
 ```bibtex
-@misc{krss2026physicalseparation,
-  author       = {Krss},
+@misc{krss-94,
+  author       = {K Siva Srinivas},
   title        = {Physical Separation Verification and Its Limits for Masked FPGA Implementations},
   year         = {2026},
   howpublished = {\url{https://github.com/krss-94/physical-separation-verification}},
   note         = {B.E. Electronics and Communication Engineering, Sathyabama Institute of
-                   Science and Technology, Chennai. Research guidance: Dr. G. Rajalakshmi.}
+                   Science and Technology, Chennai.}
 }
 ```
 
