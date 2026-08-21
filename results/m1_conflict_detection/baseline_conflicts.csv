@@ -1,0 +1,6 @@
+tile,share0_net,share1_net,conflict_type
+INT_X14Y88,b_sh0_net,b_sh1_net,open_fabric
+INT_X14Y89,b_sh0_net,a_sh1_net,open_fabric
+INT_X15Y89,b_sh0_net,a_sh1_net,co_located_terminal
+INT_X14Y90,a_sh0_net,a_sh1_net,open_fabric
+INT_X15Y90,a_sh0_net,b_sh1_net,co_located_terminal

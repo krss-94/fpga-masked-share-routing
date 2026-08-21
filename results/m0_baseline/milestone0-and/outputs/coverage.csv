@@ -1,0 +1,16 @@
+object,share,status,mechanism
+u_and_cross10/y_INST_0,"0,1",mapped,
+b_sh1_r_reg,1,mapped,
+t0_sh1_reg,1,mapped,
+q_sh0_reg_reg,0,mapped,
+b_sh0_r_reg,0,mapped,
+a_sh1_r_reg,1,mapped,
+r_r_reg,,unmapped,unclassified (heuristic)
+t0_sh0_reg,0,mapped,
+q_sh1_reg_reg,1,mapped,
+u_and_sh0/y_INST_0,0,mapped,
+t0_sh0_i_1,0,mapped,
+u_and_sh1/y_INST_0,1,mapped,
+t0_sh1_i_1,1,mapped,
+a_sh0_r_reg,0,mapped,
+u_and_cross01/y_INST_0,"0,1",mapped,

@@ -1,0 +1,23 @@
+object,share,status,mechanism
+q_sh0_OBUF_inst,0,mapped,
+r_r_IBUF_inst,,unmapped,buffer_insertion (heuristic)
+b_sh0_IBUF_inst,0,mapped,
+q_sh1_OBUF_inst,1,mapped,
+q_sh1_i_1,1,mapped,
+clk,,unmapped,unclassified (heuristic)
+r_r,,unmapped,unclassified (heuristic)
+a_sh0_IBUF_inst,0,mapped,
+b_sh1_IBUF_inst,1,mapped,
+q_sh0,0,mapped,
+clk_IBUF_inst,,unmapped,buffer_insertion (heuristic)
+q_sh1,1,mapped,
+q_sh1_reg,1,mapped,
+clk_IBUF_BUFG_inst,,unmapped,buffer_insertion (heuristic)
+b_sh1,1,mapped,
+b_sh0,0,mapped,
+q_sh0_i_1,0,mapped,
+q_sh0_reg,0,mapped,
+<LOCKED>,,unmapped,unclassified (heuristic)
+a_sh1_IBUF_inst,1,mapped,
+a_sh1,1,mapped,
+a_sh0,0,mapped,

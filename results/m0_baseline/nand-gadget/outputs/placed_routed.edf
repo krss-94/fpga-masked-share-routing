@@ -1,0 +1,330 @@
+(edif masked_nand_gadget
+  (edifversion 2 0 0)
+  (edifLevel 0)
+  (keywordmap (keywordlevel 0))
+(status
+ (written
+  (timeStamp 2026 07 04 16 39 08)
+  (program "Vivado" (version "2026.1"))
+  (comment "Built on 'Tue Jun 16 11:02:23 MDT 2026'")
+  (comment "Built by 'xbuild'")
+ )
+)
+  (Library hdi_primitives
+    (edifLevel 0)
+    (technology (numberDefinition ))
+   (cell GND (celltype GENERIC)
+     (view netlist (viewtype NETLIST)
+       (interface 
+        (port G (direction OUTPUT))
+       )
+     )
+   )
+   (cell VCC (celltype GENERIC)
+     (view netlist (viewtype NETLIST)
+       (interface 
+        (port P (direction OUTPUT))
+       )
+     )
+   )
+   (cell IBUF (celltype GENERIC)
+     (view netlist (viewtype NETLIST)
+       (interface 
+        (port O (direction OUTPUT))
+        (port I (direction INPUT))
+       )
+     )
+   )
+   (cell BUFG (celltype GENERIC)
+     (view netlist (viewtype NETLIST)
+       (interface 
+        (port O (direction OUTPUT))
+        (port I (direction INPUT))
+       )
+     )
+   )
+   (cell OBUF (celltype GENERIC)
+     (view netlist (viewtype NETLIST)
+       (interface 
+        (port O (direction OUTPUT))
+        (port I (direction INPUT))
+       )
+     )
+   )
+   (cell LUT3 (celltype GENERIC)
+     (view netlist (viewtype NETLIST)
+       (interface 
+        (port O (direction OUTPUT))
+        (port I0 (direction INPUT))
+        (port I1 (direction INPUT))
+        (port I2 (direction INPUT))
+       )
+     )
+   )
+   (cell FDRE (celltype GENERIC)
+     (view netlist (viewtype NETLIST)
+       (interface 
+        (port Q (direction OUTPUT))
+        (port C (direction INPUT))
+        (port CE (direction INPUT))
+        (port D (direction INPUT))
+        (port R (direction INPUT))
+       )
+     )
+   )
+   (cell LUT5 (celltype GENERIC)
+     (view netlist (viewtype NETLIST)
+       (interface 
+        (port O (direction OUTPUT))
+        (port I0 (direction INPUT))
+        (port I1 (direction INPUT))
+        (port I2 (direction INPUT))
+        (port I3 (direction INPUT))
+        (port I4 (direction INPUT))
+       )
+     )
+   )
+   (cell INV (celltype GENERIC)
+     (view netlist (viewtype NETLIST)
+       (interface
+         (port I (direction INPUT))
+         (port O (direction OUTPUT))
+       )
+     )
+   )
+  )
+  (Library work
+    (edifLevel 0)
+    (technology (numberDefinition ))
+   (cell masked_nand_gadget (celltype GENERIC)
+     (view masked_nand_gadget (viewtype NETLIST)
+       (interface 
+        (port a_sh0 (direction INPUT))
+        (port a_sh1 (direction INPUT))
+        (port b_sh0 (direction INPUT))
+        (port b_sh1 (direction INPUT))
+        (port clk (direction INPUT))
+        (port q_sh0 (direction OUTPUT))
+        (port q_sh1 (direction OUTPUT))
+        (port r_r (direction INPUT))
+       )
+       (contents
+         (instance GND (viewref netlist (cellref GND (libraryref hdi_primitives))))
+         (instance VCC (viewref netlist (cellref VCC (libraryref hdi_primitives))))
+         (instance a_sh0_IBUF_inst (viewref netlist (cellref IBUF (libraryref hdi_primitives))))
+         (instance a_sh1_IBUF_inst (viewref netlist (cellref IBUF (libraryref hdi_primitives))))
+         (instance b_sh0_IBUF_inst (viewref netlist (cellref IBUF (libraryref hdi_primitives))))
+         (instance b_sh1_IBUF_inst (viewref netlist (cellref IBUF (libraryref hdi_primitives))))
+         (instance clk_IBUF_BUFG_inst (viewref netlist (cellref BUFG (libraryref hdi_primitives))))
+         (instance clk_IBUF_inst (viewref netlist (cellref IBUF (libraryref hdi_primitives))))
+         (instance q_sh0_OBUF_inst (viewref netlist (cellref OBUF (libraryref hdi_primitives))))
+         (instance q_sh0_i_1 (viewref netlist (cellref LUT3 (libraryref hdi_primitives)))
+           (property INIT (string "8'h95"))
+           (property SOFT_HLUTNM (string "soft_lutpair0"))
+         )
+         (instance q_sh0_reg (viewref netlist (cellref FDRE (libraryref hdi_primitives)))
+           (property INIT (string "1'b0"))
+         )
+         (instance q_sh1_OBUF_inst (viewref netlist (cellref OBUF (libraryref hdi_primitives))))
+         (instance q_sh1_i_1 (viewref netlist (cellref LUT5 (libraryref hdi_primitives)))
+           (property INIT (string "32'h635F9CA0"))
+           (property SOFT_HLUTNM (string "soft_lutpair0"))
+         )
+         (instance q_sh1_reg (viewref netlist (cellref FDRE (libraryref hdi_primitives)))
+           (property INIT (string "1'b0"))
+         )
+         (instance r_r_IBUF_inst (viewref netlist (cellref IBUF (libraryref hdi_primitives))))
+         (net (rename &_const0_ "<const0>") (joined
+          (portref G (instanceref GND))
+          (portref R (instanceref q_sh0_reg))
+          (portref R (instanceref q_sh1_reg))
+          )
+         )
+         (net (rename &_const1_ "<const1>") (joined
+          (portref CE (instanceref q_sh0_reg))
+          (portref CE (instanceref q_sh1_reg))
+          (portref P (instanceref VCC))
+          )
+         )
+         (net a_sh0 (joined
+          (portref I (instanceref a_sh0_IBUF_inst))
+          (portref a_sh0)
+          )
+         )
+         (net a_sh0_IBUF (joined
+          (portref I1 (instanceref q_sh1_i_1))
+          (portref I2 (instanceref q_sh0_i_1))
+          (portref O (instanceref a_sh0_IBUF_inst))
+          )
+         )
+         (net a_sh1 (joined
+          (portref I (instanceref a_sh1_IBUF_inst))
+          (portref a_sh1)
+          )
+         )
+         (net a_sh1_IBUF (joined
+          (portref I2 (instanceref q_sh1_i_1))
+          (portref O (instanceref a_sh1_IBUF_inst))
+          )
+         )
+         (net and_sh1 (joined
+          (portref D (instanceref q_sh1_reg))
+          (portref O (instanceref q_sh1_i_1))
+          )
+         )
+         (net b_sh0 (joined
+          (portref I (instanceref b_sh0_IBUF_inst))
+          (portref b_sh0)
+          )
+         )
+         (net b_sh0_IBUF (joined
+          (portref I0 (instanceref q_sh1_i_1))
+          (portref I1 (instanceref q_sh0_i_1))
+          (portref O (instanceref b_sh0_IBUF_inst))
+          )
+         )
+         (net b_sh1 (joined
+          (portref I (instanceref b_sh1_IBUF_inst))
+          (portref b_sh1)
+          )
+         )
+         (net b_sh1_IBUF (joined
+          (portref I3 (instanceref q_sh1_i_1))
+          (portref O (instanceref b_sh1_IBUF_inst))
+          )
+         )
+         (net clk (joined
+          (portref I (instanceref clk_IBUF_inst))
+          (portref clk)
+          )
+         )
+         (net clk_IBUF (joined
+          (portref I (instanceref clk_IBUF_BUFG_inst))
+          (portref O (instanceref clk_IBUF_inst))
+          )
+         )
+         (net clk_IBUF_BUFG (joined
+          (portref C (instanceref q_sh0_reg))
+          (portref C (instanceref q_sh1_reg))
+          (portref O (instanceref clk_IBUF_BUFG_inst))
+          )
+         )
+         (net q_sh0 (joined
+          (portref O (instanceref q_sh0_OBUF_inst))
+          (portref q_sh0)
+          )
+         )
+         (net q_sh0_OBUF (joined
+          (portref I (instanceref q_sh0_OBUF_inst))
+          (portref Q (instanceref q_sh0_reg))
+          )
+         )
+         (net q_sh0_i_1_n_0 (joined
+          (portref D (instanceref q_sh0_reg))
+          (portref O (instanceref q_sh0_i_1))
+          )
+         )
+         (net q_sh1 (joined
+          (portref O (instanceref q_sh1_OBUF_inst))
+          (portref q_sh1)
+          )
+         )
+         (net q_sh1_OBUF (joined
+          (portref I (instanceref q_sh1_OBUF_inst))
+          (portref Q (instanceref q_sh1_reg))
+          )
+         )
+         (net r_r (joined
+          (portref I (instanceref r_r_IBUF_inst))
+          (portref r_r)
+          )
+         )
+         (net r_r_IBUF (joined
+          (portref I0 (instanceref q_sh0_i_1))
+          (portref I4 (instanceref q_sh1_i_1))
+          (portref O (instanceref r_r_IBUF_inst))
+          )
+         )
+       )
+
+           (property ECO_CHECKSUM (string "79d8e86d"))
+     )
+   )
+  )
+(comment "Reference To The Cell Of Highest Level")
+
+  (design masked_nand_gadget
+    (cellref masked_nand_gadget (libraryref work))
+    (property TELEMETRY_DATA (string "{
+  % 34 %Design Characteristics Data% 34 %: {
+    % 34 %Utilization Report% 34 %: {
+      % 34 %BRAM% 34 %: {
+        % 34 %Available% 34 %: % 34 %135% 34 %,
+        % 34 %Utilization% 34 %: % 34 %0% 34 %
+      },
+      % 34 %BUFGCTRL% 34 %: {
+        % 34 %Available% 34 %: % 34 %32% 34 %,
+        % 34 %Utilization% 34 %: % 34 %1% 34 %
+      },
+      % 34 %DSP% 34 %: {
+        % 34 %Available% 34 %: % 34 %240% 34 %,
+        % 34 %Utilization% 34 %: % 34 %0% 34 %
+      },
+      % 34 %F7MUX% 34 %: {
+        % 34 %Available% 34 %: % 34 %31700% 34 %,
+        % 34 %Utilization% 34 %: % 34 %0% 34 %
+      },
+      % 34 %F8MUX% 34 %: {
+        % 34 %Available% 34 %: % 34 %15850% 34 %,
+        % 34 %Utilization% 34 %: % 34 %0% 34 %
+      },
+      % 34 %LUT% 34 %: {
+        % 34 %Available% 34 %: % 34 %63400% 34 %,
+        % 34 %Utilization% 34 %: % 34 %1% 34 %
+      },
+      % 34 %LUTAsLogic% 34 %: {
+        % 34 %Available% 34 %: % 34 %63400% 34 %,
+        % 34 %Utilization% 34 %: % 34 %1% 34 %
+      },
+      % 34 %LUTAsMem% 34 %: {
+        % 34 %Available% 34 %: % 34 %19000% 34 %,
+        % 34 %Utilization% 34 %: % 34 %0% 34 %
+      },
+      % 34 %MMCM% 34 %: {
+        % 34 %Available% 34 %: % 34 %6% 34 %,
+        % 34 %Utilization% 34 %: % 34 %0% 34 %
+      },
+      % 34 %PLL% 34 %: {
+        % 34 %Available% 34 %: % 34 %6% 34 %,
+        % 34 %Utilization% 34 %: % 34 %0% 34 %
+      },
+      % 34 %REG% 34 %: {
+        % 34 %Available% 34 %: % 34 %126800% 34 %,
+        % 34 %Utilization% 34 %: % 34 %2% 34 %
+      }
+    }
+  },
+  % 34 %Design Flow Data% 34 %: {
+    % 34 %Design Data% 34 %: {
+      % 34 %Design Mode% 34 %: % 34 %Non-Project Flow% 34 %,
+      % 34 %Top Methodology% 34 %: % 34 %Verilog% 34 %
+    },
+    % 34 %Implementation% 34 %: {
+      % 34 %Opt Design% 34 %: {
+        % 34 %Run Time% 34 %: % 34 %20 seconds% 34 %
+      },
+      % 34 %Place Design% 34 %: {
+        % 34 %Run Time% 34 %: % 34 %6.518000 seconds% 34 %
+      },
+      % 34 %Route Design% 34 %: {
+        % 34 %Run Time% 34 %: % 34 %39.046000 seconds% 34 %
+      }
+    },
+    % 34 %Synthesis% 34 %: {
+      % 34 %Run Time% 34 %: % 34 %25.587000 seconds% 34 %
+    }
+  }
+}"))
+    (property part (string "xc7a100tcsg324-1"))
+  )
+)

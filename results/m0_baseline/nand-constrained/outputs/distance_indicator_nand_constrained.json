@@ -1,0 +1,19 @@
+{
+  "dcp": "placed_routed_constrained.dcp",
+  "label": "nand_constrained",
+  "share0_object_count": 2,
+  "share1_object_count": 2,
+  "skipped_no_coords": 0,
+  "skipped_not_single_share": 6,
+  "skipped_non_core_logic": 12,
+  "note": "v3: allowlist genuine core-logic cell types (LUT*/FDRE/FDSE/FDCE/FDPE/CARRY4/CARRY8) instead of blacklisting known IO/buffer types -- see module docstring for why v2's blacklist missed a port pass-through confound.",
+  "distance_indicator": {
+    "pairs_considered": 4,
+    "min_distance": 85,
+    "mean_distance": 85.0,
+    "closest_pair": [
+      "q_sh0_i_1",
+      "q_sh1_i_1"
+    ]
+  }
+}

@@ -1,0 +1,590 @@
+(edif masked_and_gadget
+  (edifversion 2 0 0)
+  (edifLevel 0)
+  (keywordmap (keywordlevel 0))
+(status
+ (written
+  (timeStamp 2026 07 05 06 56 22)
+  (program "Vivado" (version "2026.1"))
+  (comment "Built on 'Tue Jun 16 11:02:23 MDT 2026'")
+  (comment "Built by 'xbuild'")
+ )
+)
+  (Library hdi_primitives
+    (edifLevel 0)
+    (technology (numberDefinition ))
+   (cell VCC (celltype GENERIC)
+     (view netlist (viewtype NETLIST)
+       (interface 
+        (port P (direction OUTPUT))
+       )
+     )
+   )
+   (cell IBUF (celltype GENERIC)
+     (view netlist (viewtype NETLIST)
+       (interface 
+        (port O (direction OUTPUT))
+        (port I (direction INPUT))
+       )
+     )
+   )
+   (cell FDRE (celltype GENERIC)
+     (view netlist (viewtype NETLIST)
+       (interface 
+        (port Q (direction OUTPUT))
+        (port C (direction INPUT))
+        (port CE (direction INPUT))
+        (port D (direction INPUT))
+        (port R (direction INPUT))
+       )
+     )
+   )
+   (cell BUFG (celltype GENERIC)
+     (view netlist (viewtype NETLIST)
+       (interface 
+        (port O (direction OUTPUT))
+        (port I (direction INPUT))
+       )
+     )
+   )
+   (cell OBUF (celltype GENERIC)
+     (view netlist (viewtype NETLIST)
+       (interface 
+        (port O (direction OUTPUT))
+        (port I (direction INPUT))
+       )
+     )
+   )
+   (cell LUT2 (celltype GENERIC)
+     (view netlist (viewtype NETLIST)
+       (interface 
+        (port O (direction OUTPUT))
+        (port I0 (direction INPUT))
+        (port I1 (direction INPUT))
+       )
+     )
+   )
+   (cell LUT4 (celltype GENERIC)
+     (view netlist (viewtype NETLIST)
+       (interface 
+        (port O (direction OUTPUT))
+        (port I0 (direction INPUT))
+        (port I1 (direction INPUT))
+        (port I2 (direction INPUT))
+        (port I3 (direction INPUT))
+       )
+     )
+   )
+   (cell INV (celltype GENERIC)
+     (view netlist (viewtype NETLIST)
+       (interface
+         (port I (direction INPUT))
+         (port O (direction OUTPUT))
+       )
+     )
+   )
+  )
+  (Library work
+    (edifLevel 0)
+    (technology (numberDefinition ))
+   (cell LUT2_and_cross01 (celltype GENERIC)
+     (view LUT2_and_cross01 (viewtype NETLIST)
+       (interface 
+        (port a (direction INPUT))
+        (port b (direction INPUT))
+        (port y (direction OUTPUT))
+       )
+       (contents
+         (instance y_INST_0 (viewref netlist (cellref LUT2 (libraryref hdi_primitives)))
+           (property INIT (string "4'h8"))
+         )
+         (net a (joined
+          (portref I0 (instanceref y_INST_0))
+          (portref a)
+          )
+         )
+         (net b (joined
+          (portref I1 (instanceref y_INST_0))
+          (portref b)
+          )
+         )
+         (net y (joined
+          (portref O (instanceref y_INST_0))
+          (portref y)
+          )
+         )
+       )
+     )
+   )
+   (cell LUT2_and_cross10 (celltype GENERIC)
+     (view LUT2_and_cross10 (viewtype NETLIST)
+       (interface 
+        (port a (direction INPUT))
+        (port b (direction INPUT))
+        (port y (direction OUTPUT))
+       )
+       (contents
+         (instance y_INST_0 (viewref netlist (cellref LUT2 (libraryref hdi_primitives)))
+           (property INIT (string "4'h8"))
+         )
+         (net a (joined
+          (portref I0 (instanceref y_INST_0))
+          (portref a)
+          )
+         )
+         (net b (joined
+          (portref I1 (instanceref y_INST_0))
+          (portref b)
+          )
+         )
+         (net y (joined
+          (portref O (instanceref y_INST_0))
+          (portref y)
+          )
+         )
+       )
+     )
+   )
+   (cell LUT2_and_sh0 (celltype GENERIC)
+     (view LUT2_and_sh0 (viewtype NETLIST)
+       (interface 
+        (port a (direction INPUT))
+        (port b (direction INPUT))
+        (port y (direction OUTPUT))
+       )
+       (contents
+         (instance y_INST_0 (viewref netlist (cellref LUT2 (libraryref hdi_primitives)))
+           (property INIT (string "4'h8"))
+         )
+         (net a (joined
+          (portref I0 (instanceref y_INST_0))
+          (portref a)
+          )
+         )
+         (net b (joined
+          (portref I1 (instanceref y_INST_0))
+          (portref b)
+          )
+         )
+         (net y (joined
+          (portref O (instanceref y_INST_0))
+          (portref y)
+          )
+         )
+       )
+     )
+   )
+   (cell LUT2_and_sh1 (celltype GENERIC)
+     (view LUT2_and_sh1 (viewtype NETLIST)
+       (interface 
+        (port a (direction INPUT))
+        (port b (direction INPUT))
+        (port y (direction OUTPUT))
+       )
+       (contents
+         (instance y_INST_0 (viewref netlist (cellref LUT2 (libraryref hdi_primitives)))
+           (property INIT (string "4'h8"))
+         )
+         (net a (joined
+          (portref I0 (instanceref y_INST_0))
+          (portref a)
+          )
+         )
+         (net b (joined
+          (portref I1 (instanceref y_INST_0))
+          (portref b)
+          )
+         )
+         (net y (joined
+          (portref O (instanceref y_INST_0))
+          (portref y)
+          )
+         )
+       )
+     )
+   )
+   (cell masked_and_gadget (celltype GENERIC)
+     (view masked_and_gadget (viewtype NETLIST)
+       (interface 
+        (port a_sh0 (direction INPUT))
+        (port a_sh1 (direction INPUT))
+        (port b_sh0 (direction INPUT))
+        (port b_sh1 (direction INPUT))
+        (port clk (direction INPUT))
+        (port q_sh0 (direction OUTPUT))
+        (port q_sh1 (direction OUTPUT))
+        (port r (direction INPUT))
+        (port rst (direction INPUT))
+       )
+       (contents
+         (instance VCC (viewref netlist (cellref VCC (libraryref hdi_primitives))))
+         (instance a_sh0_IBUF_inst (viewref netlist (cellref IBUF (libraryref hdi_primitives))))
+         (instance a_sh0_r_reg (viewref netlist (cellref FDRE (libraryref hdi_primitives)))
+           (property DONT_TOUCH (boolean (true)))
+           (property KEEP (string "yes"))
+           (property INIT (string "1'b0"))
+         )
+         (instance a_sh1_IBUF_inst (viewref netlist (cellref IBUF (libraryref hdi_primitives))))
+         (instance a_sh1_r_reg (viewref netlist (cellref FDRE (libraryref hdi_primitives)))
+           (property DONT_TOUCH (boolean (true)))
+           (property KEEP (string "yes"))
+           (property INIT (string "1'b0"))
+         )
+         (instance b_sh0_IBUF_inst (viewref netlist (cellref IBUF (libraryref hdi_primitives))))
+         (instance b_sh0_r_reg (viewref netlist (cellref FDRE (libraryref hdi_primitives)))
+           (property DONT_TOUCH (boolean (true)))
+           (property KEEP (string "yes"))
+           (property INIT (string "1'b0"))
+         )
+         (instance b_sh1_IBUF_inst (viewref netlist (cellref IBUF (libraryref hdi_primitives))))
+         (instance b_sh1_r_reg (viewref netlist (cellref FDRE (libraryref hdi_primitives)))
+           (property DONT_TOUCH (boolean (true)))
+           (property KEEP (string "yes"))
+           (property INIT (string "1'b0"))
+         )
+         (instance clk_IBUF_BUFG_inst (viewref netlist (cellref BUFG (libraryref hdi_primitives))))
+         (instance clk_IBUF_inst (viewref netlist (cellref IBUF (libraryref hdi_primitives))))
+         (instance q_sh0_OBUF_inst (viewref netlist (cellref OBUF (libraryref hdi_primitives))))
+         (instance q_sh0_reg_reg (viewref netlist (cellref FDRE (libraryref hdi_primitives)))
+           (property DONT_TOUCH (boolean (true)))
+           (property KEEP (string "yes"))
+           (property INIT (string "1'b0"))
+         )
+         (instance q_sh1_OBUF_inst (viewref netlist (cellref OBUF (libraryref hdi_primitives))))
+         (instance q_sh1_reg_reg (viewref netlist (cellref FDRE (libraryref hdi_primitives)))
+           (property DONT_TOUCH (boolean (true)))
+           (property KEEP (string "yes"))
+           (property INIT (string "1'b0"))
+         )
+         (instance r_IBUF_inst (viewref netlist (cellref IBUF (libraryref hdi_primitives))))
+         (instance r_r_reg (viewref netlist (cellref FDRE (libraryref hdi_primitives)))
+           (property DONT_TOUCH (boolean (true)))
+           (property KEEP (string "yes"))
+           (property INIT (string "1'b0"))
+         )
+         (instance rst_IBUF_inst (viewref netlist (cellref IBUF (libraryref hdi_primitives))))
+         (instance t0_sh0_i_1 (viewref netlist (cellref LUT2 (libraryref hdi_primitives)))
+           (property INIT (string "4'h6"))
+         )
+         (instance t0_sh0_reg (viewref netlist (cellref FDRE (libraryref hdi_primitives)))
+           (property DONT_TOUCH (boolean (true)))
+           (property KEEP (string "yes"))
+           (property INIT (string "1'b0"))
+         )
+         (instance t0_sh1_i_1 (viewref netlist (cellref LUT4 (libraryref hdi_primitives)))
+           (property INIT (string "16'h6996"))
+         )
+         (instance t0_sh1_reg (viewref netlist (cellref FDRE (libraryref hdi_primitives)))
+           (property DONT_TOUCH (boolean (true)))
+           (property KEEP (string "yes"))
+           (property INIT (string "1'b0"))
+         )
+         (instance u_and_cross01 (viewref LUT2_and_cross01 (cellref LUT2_and_cross01 (libraryref work)))
+           (property DONT_TOUCH (boolean (true)))
+         )
+         (instance u_and_cross10 (viewref LUT2_and_cross10 (cellref LUT2_and_cross10 (libraryref work)))
+           (property DONT_TOUCH (boolean (true)))
+         )
+         (instance u_and_sh0 (viewref LUT2_and_sh0 (cellref LUT2_and_sh0 (libraryref work)))
+           (property DONT_TOUCH (boolean (true)))
+         )
+         (instance u_and_sh1 (viewref LUT2_and_sh1 (cellref LUT2_and_sh1 (libraryref work)))
+           (property DONT_TOUCH (boolean (true)))
+         )
+         (net (rename &_const1_ "<const1>") (joined
+          (portref CE (instanceref a_sh0_r_reg))
+          (portref CE (instanceref a_sh1_r_reg))
+          (portref CE (instanceref b_sh0_r_reg))
+          (portref CE (instanceref b_sh1_r_reg))
+          (portref CE (instanceref q_sh0_reg_reg))
+          (portref CE (instanceref q_sh1_reg_reg))
+          (portref CE (instanceref r_r_reg))
+          (portref CE (instanceref t0_sh0_reg))
+          (portref CE (instanceref t0_sh1_reg))
+          (portref P (instanceref VCC))
+          )
+         )
+         (net a_sh0 (joined
+          (portref I (instanceref a_sh0_IBUF_inst))
+          (portref a_sh0)
+          )
+         )
+         (net a_sh0_IBUF (joined
+          (portref D (instanceref a_sh0_r_reg))
+          (portref O (instanceref a_sh0_IBUF_inst))
+          )
+         )
+         (net a_sh0_r (joined
+          (portref Q (instanceref a_sh0_r_reg))
+          (portref a (instanceref u_and_cross01))
+          (portref a (instanceref u_and_sh0))
+          )
+
+           (property DONT_TOUCH (boolean (true)))
+         )
+         (net a_sh1 (joined
+          (portref I (instanceref a_sh1_IBUF_inst))
+          (portref a_sh1)
+          )
+         )
+         (net a_sh1_IBUF (joined
+          (portref D (instanceref a_sh1_r_reg))
+          (portref O (instanceref a_sh1_IBUF_inst))
+          )
+         )
+         (net a_sh1_r (joined
+          (portref Q (instanceref a_sh1_r_reg))
+          (portref a (instanceref u_and_cross10))
+          (portref a (instanceref u_and_sh1))
+          )
+
+           (property DONT_TOUCH (boolean (true)))
+         )
+         (net b_sh0 (joined
+          (portref I (instanceref b_sh0_IBUF_inst))
+          (portref b_sh0)
+          )
+         )
+         (net b_sh0_IBUF (joined
+          (portref D (instanceref b_sh0_r_reg))
+          (portref O (instanceref b_sh0_IBUF_inst))
+          )
+         )
+         (net b_sh0_r (joined
+          (portref Q (instanceref b_sh0_r_reg))
+          (portref b (instanceref u_and_cross10))
+          (portref b (instanceref u_and_sh0))
+          )
+
+           (property DONT_TOUCH (boolean (true)))
+         )
+         (net b_sh1 (joined
+          (portref I (instanceref b_sh1_IBUF_inst))
+          (portref b_sh1)
+          )
+         )
+         (net b_sh1_IBUF (joined
+          (portref D (instanceref b_sh1_r_reg))
+          (portref O (instanceref b_sh1_IBUF_inst))
+          )
+         )
+         (net b_sh1_r (joined
+          (portref Q (instanceref b_sh1_r_reg))
+          (portref b (instanceref u_and_cross01))
+          (portref b (instanceref u_and_sh1))
+          )
+
+           (property DONT_TOUCH (boolean (true)))
+         )
+         (net clk (joined
+          (portref I (instanceref clk_IBUF_inst))
+          (portref clk)
+          )
+         )
+         (net clk_IBUF (joined
+          (portref I (instanceref clk_IBUF_BUFG_inst))
+          (portref O (instanceref clk_IBUF_inst))
+          )
+         )
+         (net clk_IBUF_BUFG (joined
+          (portref C (instanceref a_sh0_r_reg))
+          (portref C (instanceref a_sh1_r_reg))
+          (portref C (instanceref b_sh0_r_reg))
+          (portref C (instanceref b_sh1_r_reg))
+          (portref C (instanceref q_sh0_reg_reg))
+          (portref C (instanceref q_sh1_reg_reg))
+          (portref C (instanceref r_r_reg))
+          (portref C (instanceref t0_sh0_reg))
+          (portref C (instanceref t0_sh1_reg))
+          (portref O (instanceref clk_IBUF_BUFG_inst))
+          )
+         )
+         (net q_sh0 (joined
+          (portref O (instanceref q_sh0_OBUF_inst))
+          (portref q_sh0)
+          )
+         )
+         (net q_sh0_reg (joined
+          (portref I (instanceref q_sh0_OBUF_inst))
+          (portref Q (instanceref q_sh0_reg_reg))
+          )
+
+           (property DONT_TOUCH (boolean (true)))
+         )
+         (net q_sh1 (joined
+          (portref O (instanceref q_sh1_OBUF_inst))
+          (portref q_sh1)
+          )
+         )
+         (net q_sh1_reg (joined
+          (portref I (instanceref q_sh1_OBUF_inst))
+          (portref Q (instanceref q_sh1_reg_reg))
+          )
+
+           (property DONT_TOUCH (boolean (true)))
+         )
+         (net r (joined
+          (portref I (instanceref r_IBUF_inst))
+          (portref r)
+          )
+         )
+         (net r_IBUF (joined
+          (portref D (instanceref r_r_reg))
+          (portref O (instanceref r_IBUF_inst))
+          )
+         )
+         (net r_r (joined
+          (portref I0 (instanceref t0_sh0_i_1))
+          (portref I3 (instanceref t0_sh1_i_1))
+          (portref Q (instanceref r_r_reg))
+          )
+
+           (property DONT_TOUCH (boolean (true)))
+         )
+         (net rst (joined
+          (portref I (instanceref rst_IBUF_inst))
+          (portref rst)
+          )
+         )
+         (net rst_IBUF (joined
+          (portref O (instanceref rst_IBUF_inst))
+          (portref R (instanceref a_sh0_r_reg))
+          (portref R (instanceref a_sh1_r_reg))
+          (portref R (instanceref b_sh0_r_reg))
+          (portref R (instanceref b_sh1_r_reg))
+          (portref R (instanceref q_sh0_reg_reg))
+          (portref R (instanceref q_sh1_reg_reg))
+          (portref R (instanceref r_r_reg))
+          (portref R (instanceref t0_sh0_reg))
+          (portref R (instanceref t0_sh1_reg))
+          )
+         )
+         (net t0_sh0 (joined
+          (portref D (instanceref q_sh0_reg_reg))
+          (portref Q (instanceref t0_sh0_reg))
+          )
+
+           (property DONT_TOUCH (boolean (true)))
+         )
+         (net t0_sh0_reg0 (joined
+          (portref D (instanceref t0_sh0_reg))
+          (portref O (instanceref t0_sh0_i_1))
+          )
+         )
+         (net t0_sh1 (joined
+          (portref D (instanceref q_sh1_reg_reg))
+          (portref Q (instanceref t0_sh1_reg))
+          )
+
+           (property DONT_TOUCH (boolean (true)))
+         )
+         (net t0_sh1_reg0 (joined
+          (portref D (instanceref t0_sh1_reg))
+          (portref O (instanceref t0_sh1_i_1))
+          )
+         )
+         (net term_cross01 (joined
+          (portref I1 (instanceref t0_sh1_i_1))
+          (portref y (instanceref u_and_cross01))
+          )
+         )
+         (net term_cross10 (joined
+          (portref I0 (instanceref t0_sh1_i_1))
+          (portref y (instanceref u_and_cross10))
+          )
+         )
+         (net term_sh0 (joined
+          (portref I1 (instanceref t0_sh0_i_1))
+          (portref y (instanceref u_and_sh0))
+          )
+         )
+         (net term_sh1 (joined
+          (portref I2 (instanceref t0_sh1_i_1))
+          (portref y (instanceref u_and_sh1))
+          )
+         )
+       )
+
+           (property and (string "1"))
+           (property place (string "1"))
+           (property ECO_CHECKSUM (string "5880aa57"))
+     )
+   )
+  )
+(comment "Reference To The Cell Of Highest Level")
+
+  (design masked_and_gadget
+    (cellref masked_and_gadget (libraryref work))
+    (property TELEMETRY_DATA (string "{
+  % 34 %Design Characteristics Data% 34 %: {
+    % 34 %Utilization Report% 34 %: {
+      % 34 %BRAM% 34 %: {
+        % 34 %Available% 34 %: % 34 %135% 34 %,
+        % 34 %Utilization% 34 %: % 34 %0% 34 %
+      },
+      % 34 %BUFGCTRL% 34 %: {
+        % 34 %Available% 34 %: % 34 %32% 34 %,
+        % 34 %Utilization% 34 %: % 34 %1% 34 %
+      },
+      % 34 %DSP% 34 %: {
+        % 34 %Available% 34 %: % 34 %240% 34 %,
+        % 34 %Utilization% 34 %: % 34 %0% 34 %
+      },
+      % 34 %F7MUX% 34 %: {
+        % 34 %Available% 34 %: % 34 %31700% 34 %,
+        % 34 %Utilization% 34 %: % 34 %0% 34 %
+      },
+      % 34 %F8MUX% 34 %: {
+        % 34 %Available% 34 %: % 34 %15850% 34 %,
+        % 34 %Utilization% 34 %: % 34 %0% 34 %
+      },
+      % 34 %LUT% 34 %: {
+        % 34 %Available% 34 %: % 34 %63400% 34 %,
+        % 34 %Utilization% 34 %: % 34 %6% 34 %
+      },
+      % 34 %LUTAsLogic% 34 %: {
+        % 34 %Available% 34 %: % 34 %63400% 34 %,
+        % 34 %Utilization% 34 %: % 34 %6% 34 %
+      },
+      % 34 %LUTAsMem% 34 %: {
+        % 34 %Available% 34 %: % 34 %19000% 34 %,
+        % 34 %Utilization% 34 %: % 34 %0% 34 %
+      },
+      % 34 %MMCM% 34 %: {
+        % 34 %Available% 34 %: % 34 %6% 34 %,
+        % 34 %Utilization% 34 %: % 34 %0% 34 %
+      },
+      % 34 %PLL% 34 %: {
+        % 34 %Available% 34 %: % 34 %6% 34 %,
+        % 34 %Utilization% 34 %: % 34 %0% 34 %
+      },
+      % 34 %REG% 34 %: {
+        % 34 %Available% 34 %: % 34 %126800% 34 %,
+        % 34 %Utilization% 34 %: % 34 %9% 34 %
+      }
+    }
+  },
+  % 34 %Design Flow Data% 34 %: {
+    % 34 %Design Data% 34 %: {
+      % 34 %Design Mode% 34 %: % 34 %Non-Project Flow% 34 %,
+      % 34 %Top Methodology% 34 %: % 34 %Verilog% 34 %
+    },
+    % 34 %Implementation% 34 %: {
+      % 34 %Opt Design% 34 %: {
+        % 34 %Run Time% 34 %: % 34 %17 seconds% 34 %
+      },
+      % 34 %Place Design% 34 %: {
+        % 34 %Run Time% 34 %: % 34 %2.870000 seconds% 34 %
+      },
+      % 34 %Route Design% 34 %: {
+        % 34 %Run Time% 34 %: % 34 %32.336000 seconds% 34 %
+      }
+    },
+    % 34 %Synthesis% 34 %: {
+      % 34 %Run Time% 34 %: % 34 %39.283001 seconds% 34 %
+    }
+  }
+}"))
+    (property part (string "xc7a100tcsg324-1"))
+  )
+)

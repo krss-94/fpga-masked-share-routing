@@ -1,0 +1,15 @@
+{
+  "dcp": "placed_routed.dcp",
+  "granularity": "logical_cell",
+  "cell_coverage": {
+    "total_cells": 22,
+    "exactly_one_share": 16,
+    "unmapped_count": 6,
+    "ambiguous_count": 0,
+    "coverage_ratio": 0.7272727272727273
+  },
+  "mechanism_tally_heuristic": {
+    "buffer_insertion (heuristic)": 3,
+    "unclassified (heuristic)": 3
+  }
+}
