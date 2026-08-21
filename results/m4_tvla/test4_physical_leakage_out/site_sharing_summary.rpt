@@ -1,0 +1,3 @@
+site,occupants
+SLICE_X52Y100,a_sh1_r:a_sh1_r_reg:SLICEL.A5FF  |  b_sh0_r:b_sh0_r_reg:SLICEL.BFF  |  b_sh1_r:b_sh1_r_reg:SLICEL.CFF  |  t0_sh1_reg:t0_sh1_reg:SLICEL.AFF  |  q_sh1_reg:q_sh1_reg_reg:SLICEL.DFF
+SLICE_X53Y100,a_sh0_r:a_sh0_r_reg:SLICEL.A5FF  |  t0_sh0_reg:t0_sh0_reg:SLICEL.AFF  |  q_sh0_reg:q_sh0_reg_reg:SLICEL.BFF

@@ -1,0 +1,30 @@
+#-----------------------------------------------------------
+# xsim v2026.1 (64-bit)
+# SW Build 6511674 on Tue Jun 16 11:02:23 MDT 2026
+# IP Build 6504888 on Tue Jun 09 09:05:25 MDT 2026
+# SharedData Build 6501428 on Mon Jun 08 17:34:18 MDT 2026
+# Start of session at: Thu Aug 20 13:12:41 2026
+# Process ID         : 3620
+# Current directory  : C:/vivado_work/milestone0
+# Command line       : xsim.exe -mode tcl -source {xsim.dir/gatelevel_tvla_sim/xsim_script.tcl}
+# Log file           : C:/vivado_work/milestone0/xsim.log
+# Journal file       : C:/vivado_work/milestone0\xsim.jou
+# Running On         : KRSSEFD5
+# Platform           : Windows 11
+# Operating System   : 26200
+# Processor Detail   : Apple Silicon
+# CPU Frequency      : 3072 MHz
+# CPU Physical cores : 4
+# CPU Logical cores  : 4
+# Host memory        : 10730 MB
+# Swap memory        : 0 MB
+# Total Virtual      : 10730 MB
+# Available Virtual  : 4211 MB
+#-----------------------------------------------------------
+source xsim.dir/gatelevel_tvla_sim/xsim_script.tcl
+# xsim {gatelevel_tvla_sim} -autoloadwcfg -runall
+Time resolution is 1 ps
+run -all
+$finish called at time : 400036 ns : File "C:/vivado_work/milestone0/tb_masked_and_gadget_tvla_gatelevel.v" Line 130
+exit
+INFO: [Common 17-206] Exiting xsim at Thu Aug 20 13:12:47 2026...

@@ -1,0 +1,20 @@
+VCC  |  ref_name: VCC  |  primitive: OTHERS
+a_sh0_r_reg  |  ref_name: FDRE  |  primitive: FLOP_LATCH
+a_sh1_r_reg  |  ref_name: FDRE  |  primitive: FLOP_LATCH
+b_sh0_r_reg  |  ref_name: FDRE  |  primitive: FLOP_LATCH
+b_sh1_r_reg  |  ref_name: FDRE  |  primitive: FLOP_LATCH
+q_sh0_reg_reg  |  ref_name: FDRE  |  primitive: FLOP_LATCH
+q_sh1_reg_reg  |  ref_name: FDRE  |  primitive: FLOP_LATCH
+r_r_reg  |  ref_name: FDRE  |  primitive: FLOP_LATCH
+t0_sh0_i_1  |  ref_name: LUT2  |  primitive: LUT
+t0_sh0_reg  |  ref_name: FDRE  |  primitive: FLOP_LATCH
+t0_sh1_i_1  |  ref_name: LUT4  |  primitive: LUT
+t0_sh1_reg  |  ref_name: FDRE  |  primitive: FLOP_LATCH
+u_and_cross01  |  ref_name: LUT2_and_cross01  |  primitive: 
+u_and_cross10  |  ref_name: LUT2_and_cross10  |  primitive: 
+u_and_sh0  |  ref_name: LUT2_and_sh0  |  primitive: 
+u_and_sh1  |  ref_name: LUT2_and_sh1  |  primitive: 
+u_and_cross01/y_INST_0  |  ref_name: LUT2  |  primitive: LUT
+u_and_cross10/y_INST_0  |  ref_name: LUT2  |  primitive: LUT
+u_and_sh0/y_INST_0  |  ref_name: LUT2  |  primitive: LUT
+u_and_sh1/y_INST_0  |  ref_name: LUT2  |  primitive: LUT

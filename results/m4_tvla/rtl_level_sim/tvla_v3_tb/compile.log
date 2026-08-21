@@ -1,0 +1,10 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/vivado_work/milestone0/masked_and_gadget.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module masked_and_gadget
+INFO: [VRFC 10-311] analyzing module LUT2_and_sh0
+INFO: [VRFC 10-311] analyzing module LUT2_and_sh1
+INFO: [VRFC 10-311] analyzing module LUT2_and_cross01
+INFO: [VRFC 10-311] analyzing module LUT2_and_cross10
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/vivado_work/milestone0/tb_masked_and_gadget_tvla_v3.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module tb_masked_and_gadget_tvla_v3
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/vivado_work/milestone0/tvla_v3/tvla_v3.sim/sim_1/behav/xsim/glbl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module glbl

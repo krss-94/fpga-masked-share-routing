@@ -1,0 +1,11 @@
+signal_name,found_as_net,found_as_cell,match_count
+term_cross01,yes,no,1
+term_cross10,yes,no,1
+term_sh0,yes,no,1
+term_sh1,yes,no,1
+t0_sh0,yes,yes,4
+t0_sh1,yes,yes,4
+a_sh0_r,yes,yes,2
+a_sh1_r,yes,yes,2
+b_sh0_r,yes,yes,2
+b_sh1_r,yes,yes,2

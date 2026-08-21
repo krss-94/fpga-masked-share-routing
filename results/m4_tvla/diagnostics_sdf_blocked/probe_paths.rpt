@@ -1,0 +1,17 @@
+watch_signal,hierarchical_cell_path,ref_name
+a_sh0_r,a_sh0_r_reg,FDRE
+a_sh1_r,a_sh1_r_reg,FDRE
+b_sh0_r,b_sh0_r_reg,FDRE
+b_sh1_r,b_sh1_r_reg,FDRE
+t0_sh0,t0_sh0_i_1,LUT2
+t0_sh0,t0_sh0_reg,FDRE
+t0_sh1,t0_sh1_i_1,LUT4
+t0_sh1,t0_sh1_reg,FDRE
+u_and_sh0,u_and_sh0,LUT2_and_sh0
+u_and_sh0,u_and_sh0/y_INST_0,LUT2
+u_and_sh1,u_and_sh1,LUT2_and_sh1
+u_and_sh1,u_and_sh1/y_INST_0,LUT2
+u_and_cross01,u_and_cross01,LUT2_and_cross01
+u_and_cross01,u_and_cross01/y_INST_0,LUT2
+u_and_cross10,u_and_cross10,LUT2_and_cross10
+u_and_cross10,u_and_cross10/y_INST_0,LUT2

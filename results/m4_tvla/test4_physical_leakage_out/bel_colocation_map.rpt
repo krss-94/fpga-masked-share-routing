@@ -1,0 +1,9 @@
+cell_pattern,matched_cell,site,bel
+a_sh0_r,a_sh0_r_reg,SLICE_X53Y100,SLICEL.A5FF
+a_sh1_r,a_sh1_r_reg,SLICE_X52Y100,SLICEL.A5FF
+b_sh0_r,b_sh0_r_reg,SLICE_X52Y100,SLICEL.BFF
+b_sh1_r,b_sh1_r_reg,SLICE_X52Y100,SLICEL.CFF
+t0_sh0_reg,t0_sh0_reg,SLICE_X53Y100,SLICEL.AFF
+t0_sh1_reg,t0_sh1_reg,SLICE_X52Y100,SLICEL.AFF
+q_sh0_reg,q_sh0_reg_reg,SLICE_X53Y100,SLICEL.BFF
+q_sh1_reg,q_sh1_reg_reg,SLICE_X52Y100,SLICEL.DFF
