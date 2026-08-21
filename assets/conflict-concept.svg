@@ -1,0 +1,53 @@
+<svg width="880" height="320" viewBox="0 0 880 320" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="320" fill="#0b0d12"/>
+  <rect x="0.5" y="0.5" width="879" height="319" fill="none" stroke="#1c212b"/>
+
+  <!-- tile grid, 40px cells -->
+  <g stroke="#171b23" stroke-width="1">
+    <path d="M0 40H880 M0 80H880 M0 120H880 M0 160H880 M0 200H880 M0 240H880 M0 280H880
+             M40 0V320 M120 0V320 M200 0V320 M280 0V320 M360 0V320 M440 0V320 M520 0V320
+             M600 0V320 M680 0V320 M760 0V320 M840 0V320" />
+  </g>
+
+  <!-- share A pblock region -->
+  <rect x="20" y="30" width="220" height="140" fill="none" stroke="#5b9bff" stroke-width="1.4" stroke-dasharray="5 4" opacity="0.8"/>
+  <text x="24" y="22" font-family="Consolas,monospace" font-size="12" fill="#5b9bff">share A pblock</text>
+
+  <!-- share B pblock region -->
+  <rect x="20" y="180" width="220" height="120" fill="none" stroke="#d1a54c" stroke-width="1.4" stroke-dasharray="5 4" opacity="0.8"/>
+  <text x="24" y="312" font-family="Consolas,monospace" font-size="12" fill="#d1a54c">share B pblock</text>
+
+  <!-- the contested tile -->
+  <rect x="600" y="140" width="40" height="40" fill="#2a1013" stroke="#e5484d" stroke-width="1.6"/>
+  <text x="576" y="128" font-family="Consolas,monospace" font-size="11" fill="#e5484d">shared switch-box tile</text>
+
+  <!-- net A path: orthogonal, from pblock A to a sink beyond the shared tile -->
+  <path id="pathA" d="M 160,100 L 320,100 L 320,160 L 620,160" fill="none" stroke="#5b9bff" stroke-width="2" opacity="0.55"/>
+  <!-- net B path: orthogonal, from pblock B to a sink beyond the shared tile, crossing the same tile -->
+  <path id="pathB" d="M 160,240 L 360,240 L 360,200 L 620,200 L 620,180" fill="none" stroke="#d1a54c" stroke-width="2" opacity="0.55"/>
+
+  <circle r="4.5" fill="#5b9bff">
+    <animateMotion dur="5s" repeatCount="indefinite">
+      <mpath href="#pathA"/>
+    </animateMotion>
+  </circle>
+  <circle r="4.5" fill="#d1a54c">
+    <animateMotion dur="5s" repeatCount="indefinite">
+      <mpath href="#pathB"/>
+    </animateMotion>
+  </circle>
+
+  <!-- flash + label when both signals are inside the tile -->
+  <g opacity="0">
+    <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.76;0.82;0.92;1" dur="5s" repeatCount="indefinite"/>
+    <rect x="596" y="136" width="48" height="48" fill="none" stroke="#e5484d" stroke-width="2.5"/>
+    <text x="556" y="204" font-family="Consolas,monospace" font-size="13" fill="#e5484d" font-weight="bold">cross-share coupling</text>
+  </g>
+
+  <text x="656" y="26" font-family="Consolas,monospace" font-size="12" fill="#7d8797">both nets route through</text>
+  <text x="656" y="42" font-family="Consolas,monospace" font-size="12" fill="#7d8797">the same PIP fabric here</text>
+
+  <text x="20" y="315" font-family="Consolas,monospace" font-size="11" fill="#4a5260">
+    Pblocks contain placement. Nothing in the toolchain contains routing through a shared switch-box.
+  </text>
+</svg>

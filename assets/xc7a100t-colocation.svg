@@ -1,0 +1,70 @@
+<svg width="880" height="380" viewBox="0 0 880 380" xmlns="http://www.w3.org/2000/svg">
+  <rect width="880" height="380" fill="#0b0d12"/>
+  <rect x="0.5" y="0.5" width="879" height="379" fill="none" stroke="#1c212b"/>
+
+  <!-- title -->
+  <text x="30" y="34" font-family="Arial Narrow,'Helvetica Neue',Arial,sans-serif" font-weight="700" font-size="17" fill="#eef0f3">xc7a100t, unconstrained placement — one site holds LUTs from both shares</text>
+  <text x="30" y="54" font-family="Consolas,monospace" font-size="11.5" fill="#7d8797">Test 5 — a separate experiment from the xczu2 switch-box study (Test 6 / M3c) above. No share-separation constraint applied.</text>
+
+  <!-- share legend -->
+  <rect x="30" y="72" width="12" height="12" fill="#5b9bff"/>
+  <text x="48" y="82" font-family="Consolas,monospace" font-size="11" fill="#a7b0bd">share 0</text>
+  <rect x="130" y="72" width="12" height="12" fill="#d1a54c"/>
+  <text x="148" y="82" font-family="Consolas,monospace" font-size="11" fill="#a7b0bd">share 1</text>
+
+  <!-- SLICE_X52Y100 box -->
+  <rect x="330" y="110" width="220" height="180" rx="6" fill="#120d08" stroke="#e5484d" stroke-width="1.8"/>
+  <text x="440" y="100" text-anchor="middle" font-family="Consolas,monospace" font-size="12.5" fill="#e5484d">SLICE_X52Y100 — all 4 AND-term LUTs</text>
+
+  <!-- 4 LUT icons inside the site, mixed share colors -->
+  <rect x="350" y="130" width="80" height="34" rx="3" fill="#5b9bff" opacity="0.85"/>
+  <text x="390" y="151" text-anchor="middle" font-family="Consolas,monospace" font-size="10.5" fill="#04121a">LUT a·b (00)</text>
+
+  <rect x="450" y="130" width="80" height="34" rx="3" fill="#d1a54c" opacity="0.9"/>
+  <text x="490" y="151" text-anchor="middle" font-family="Consolas,monospace" font-size="10.5" fill="#1a1204">LUT a·b (01)</text>
+
+  <rect x="350" y="176" width="80" height="34" rx="3" fill="#d1a54c" opacity="0.9"/>
+  <text x="390" y="197" text-anchor="middle" font-family="Consolas,monospace" font-size="10.5" fill="#1a1204">LUT a·b (10)</text>
+
+  <rect x="450" y="176" width="80" height="34" rx="3" fill="#5b9bff" opacity="0.85"/>
+  <text x="490" y="197" text-anchor="middle" font-family="Consolas,monospace" font-size="10.5" fill="#04121a">LUT a·b (11)</text>
+
+  <!-- co-located registers, Manhattan distance 0 -->
+  <rect x="350" y="222" width="180" height="30" rx="3" fill="none" stroke="#eef0f3" stroke-width="1.4" stroke-dasharray="3 3"/>
+  <circle cx="372" cy="237" r="7" fill="#5b9bff"/>
+  <circle cx="392" cy="237" r="7" fill="#d1a54c"/>
+  <text x="410" y="241" font-family="Consolas,monospace" font-size="10.5" fill="#eef0f3">b_sh0_r / b_sh1_r — same site</text>
+
+  <text x="440" y="272" text-anchor="middle" font-family="Consolas,monospace" font-size="12" font-weight="bold" fill="#e5484d">Manhattan distance = 0</text>
+
+  <!-- three other pairs, distance 1, adjacent site -->
+  <rect x="620" y="150" width="150" height="100" rx="6" fill="none" stroke="#3a4250" stroke-width="1.4" stroke-dasharray="5 4"/>
+  <text x="695" y="140" text-anchor="middle" font-family="Consolas,monospace" font-size="11.5" fill="#7d8797">adjacent site</text>
+  <circle cx="645" cy="180" r="6" fill="#5b9bff"/><circle cx="665" cy="180" r="6" fill="#d1a54c"/>
+  <circle cx="645" cy="205" r="6" fill="#5b9bff"/><circle cx="665" cy="205" r="6" fill="#d1a54c"/>
+  <circle cx="645" cy="230" r="6" fill="#5b9bff"/><circle cx="665" cy="230" r="6" fill="#d1a54c"/>
+  <text x="695" y="184" font-family="Consolas,monospace" font-size="10" fill="#a7b0bd">pair 2</text>
+  <text x="695" y="209" font-family="Consolas,monospace" font-size="10" fill="#a7b0bd">pair 3</text>
+  <text x="695" y="234" font-family="Consolas,monospace" font-size="10" fill="#a7b0bd">pair 4</text>
+  <text x="695" y="266" text-anchor="middle" font-family="Consolas,monospace" font-size="11" fill="#a7b0bd">Manhattan distance = 1 (×3 pairs)</text>
+
+  <!-- left side: general-fabric routing note -->
+  <rect x="30" y="150" width="240" height="100" rx="6" fill="none" stroke="#3a4250" stroke-width="1.4" stroke-dasharray="5 4"/>
+  <text x="150" y="140" text-anchor="middle" font-family="Consolas,monospace" font-size="11.5" fill="#7d8797">general routing fabric</text>
+  <text x="150" y="195" text-anchor="middle" font-family="Consolas,monospace" font-size="14" font-weight="bold" fill="#7bffb0">0 shared tiles</text>
+  <text x="150" y="216" text-anchor="middle" font-family="Consolas,monospace" font-size="10.5" fill="#a7b0bd">across all 5 examined</text>
+  <text x="150" y="230" text-anchor="middle" font-family="Consolas,monospace" font-size="10.5" fill="#a7b0bd">share-tagged net pairs</text>
+
+  <path d="M270 200 C 300 200 300 200 328 200" fill="none" stroke="#565f6c" stroke-width="1.3" marker-end="url(#arrow2)"/>
+  <text x="298" y="192" text-anchor="middle" font-family="Consolas,monospace" font-size="9.5" fill="#565f6c">doesn't see intra-site sharing</text>
+
+  <defs>
+    <marker id="arrow2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#565f6c"/>
+    </marker>
+  </defs>
+
+  <!-- footnote -->
+  <text x="30" y="330" font-family="Consolas,monospace" font-size="10.5" fill="#4a5260">Structural evidence only — reflects unconstrained default placement (no share-separation XDC applied in this build).</text>
+  <text x="30" y="346" font-family="Consolas,monospace" font-size="10.5" fill="#4a5260">Does not by itself establish or rule out physical side-channel leakage. Zero shared routing tiles ≠ zero cross-share coupling.</text>
+</svg>

@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Two Shares, One Router — a visual field note</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#eef6fa; --ink-dim:#8fa8b8; --ink-faint:#4a6070;
+    --bg:#070b11; --bg-raised:#0d1420; --bg-card:#0f1826; --line:#1a2735;
+    --share-a:#35e0e8; --share-b:#ff5fd6; --danger:#ff5a4d; --amber:#ffb648; --ok:#7bffb0;
+    --display:'Space Grotesk', sans-serif; --mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg); color:var(--ink); font-family:var(--display); -webkit-font-smoothing:antialiased; overflow-x:hidden;}
+  ::selection{background:var(--share-a); color:#04121a;}
+
+  #fabric{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 42px 42px; opacity:0.14;
+    mask-image: radial-gradient(ellipse 90% 70% at 50% 20%, black 0%, transparent 75%);
+  }
+  #rail{position:fixed; top:0; left:0; height:3px; width:0%; background:linear-gradient(90deg, var(--share-a), var(--share-b)); z-index:50; transition:width .08s linear;}
+  nav.dots{position:fixed; right:20px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:13px; z-index:40;}
+  nav.dots a{width:8px; height:8px; border-radius:50%; background:var(--ink-faint); display:block; transition:all .25s ease;}
+  nav.dots a.active{background:var(--share-a); box-shadow:0 0 10px var(--share-a); transform:scale(1.4);}
+  @media (max-width: 860px){ nav.dots{display:none;} }
+
+  .wrap{max-width:1040px; margin:0 auto; padding:0 24px; position:relative; z-index:2;}
+
+  header.hero{min-height:96svh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; position:relative; z-index:2; padding:110px 24px 60px;}
+  .eyebrow{font-family:var(--mono); font-size:12.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--share-a); margin-bottom:18px;}
+  h1.title{font-weight:700; letter-spacing:-0.02em; font-size:clamp(2.1rem, 6.2vw, 4.2rem); line-height:1.06; max-width:900px;}
+  h1.title em{font-style:normal; background:linear-gradient(100deg, var(--share-a), var(--share-b)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .scrolldown{margin-top:26px; font-family:var(--mono); font-size:12px; color:var(--ink-faint); display:flex; flex-direction:column; align-items:center; gap:8px;}
+  .scrolldown .ln{width:1px; height:26px; background:linear-gradient(var(--share-a), transparent); animation:pulse-ln 1.8s ease-in-out infinite;}
+  @keyframes pulse-ln{0%,100%{opacity:.3;} 50%{opacity:1;}}
+
+  section{position:relative; z-index:2; padding:80px 0;}
+  section.dark-band{background:var(--bg-raised); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+
+  .scene-head{text-align:center; margin-bottom:36px;}
+  .kicker{font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint);}
+  .kicker span{color:var(--share-a);}
+  h2{font-weight:700; font-size:clamp(1.5rem,3.6vw,2.3rem); letter-spacing:-0.01em; margin-top:8px;}
+  .caption{font-family:var(--mono); font-size:13.5px; color:var(--ink-dim); text-align:center; max-width:640px; margin:22px auto 0; line-height:1.7;}
+  .caption b{color:var(--ink);}
+
+  .figure{padding:0;}
+  canvas#scope{width:100%; height:220px; display:block; border-radius:14px; background:#040609; border:1px solid var(--line);}
+  .scope-legend{display:flex; justify-content:center; gap:28px; margin-top:16px; font-family:var(--mono); font-size:12px; color:var(--ink-faint);}
+  .scope-legend .dot{width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:6px;}
+
+  /* big stat trio */
+  .stat-row{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:14px; overflow:hidden; margin-top:10px;}
+  .stat{background:var(--bg-card); padding:26px 18px; text-align:center;}
+  .stat .num{font-size:2.6rem; font-weight:700;}
+  .stat .num.a{color:var(--share-a);} .stat .num.b{color:var(--share-b);} .stat .num.d{color:var(--danger);} .stat .num.o{color:var(--ok);}
+  .stat .lbl{font-family:var(--mono); font-size:11.5px; color:var(--ink-faint); margin-top:6px;}
+
+  /* city intersection illustration */
+  .city-wrap{max-width:820px; margin:0 auto;}
+  .city-wrap svg{display:block; width:100%; border-radius:14px; background:#040609; border:1px solid var(--line);}
+  #citystate{
+    margin-top:16px; background:var(--bg-card); border:1px solid var(--line); border-radius:10px;
+    padding:14px 18px; font-family:var(--mono); font-size:13.5px; color:var(--ink-dim); text-align:center;
+  }
+  #citystate b{color:var(--ink);}
+  .tap-hint{text-align:center; font-family:var(--mono); font-size:11.5px; color:var(--ink-faint); margin-top:10px;}
+
+  /* masking split visual */
+  .split-wrap{max-width:640px; margin:0 auto;}
+
+  /* pipeline strip */
+  .pipeline{display:grid; grid-template-columns:1fr auto 1fr auto 1fr auto 1fr auto 1fr; align-items:stretch; gap:10px; margin-top:10px;}
+  @media (max-width:1100px){ .pipeline{grid-template-columns:1fr 1fr; } .pipeline .arrow{display:none;} }
+  @media (max-width:560px){ .pipeline{grid-template-columns:1fr;} }
+  .pstep{background:var(--bg-card); border:1px solid var(--line); border-radius:14px; padding:16px 12px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:8px; min-width:0;}
+  .pstep .picon{width:100%; height:70px; display:flex; align-items:center; justify-content:center;}
+  .pstep .picon svg{max-width:100%; height:auto;}
+  .pstep .pnum{font-family:var(--mono); font-size:10.5px; color:var(--ink-faint); letter-spacing:.08em; text-transform:uppercase;}
+  .pstep .pstat{font-size:1.5rem; font-weight:700; white-space:nowrap;}
+  .pstep .plabel{font-family:var(--mono); font-size:10.5px; color:var(--ink-dim); line-height:1.5;}
+  .pstep.ok .pstat{color:var(--ok);} .pstep.fail .pstat{color:var(--danger);} .pstep.neutral .pstat{color:var(--share-a);}
+  .arrow{display:flex; align-items:center; justify-content:center; color:var(--ink-faint); font-size:18px;}
+
+  /* escalation bars */
+  .chart-card{
+    max-width:520px; margin:0 auto; background:var(--bg-card); border:1px solid var(--line);
+    border-radius:14px; padding:24px 24px 8px;
+  }
+  #chart{display:flex; align-items:flex-end; justify-content:center; gap:22px; height:170px; padding:0 6px;}
+  #chart .col{width:64px; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;}
+  #chart .bar{width:100%; height:0; border-radius:6px 6px 0 0; transition:height 1s cubic-bezier(.2,.8,.2,1);}
+
+  footer{padding:70px 0 50px; text-align:center;}
+  footer .rule{height:1px; background:var(--line); margin-bottom:40px;}
+  footer .signoff{font-size:1.5rem; font-weight:700; max-width:600px; margin:0 auto 22px;}
+  footer .meta{font-family:var(--mono); font-size:12.5px; color:var(--ink-faint); line-height:2;}
+  footer .meta a{color:var(--share-a);}
+
+  .reveal{opacity:0; transform:translateY(20px); transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){ .reveal{transition:none; opacity:1; transform:none;} *{animation:none !important;} }
+</style>
+</head>
+<body>
+
+<div id="fabric"></div>
+<div id="rail"></div>
+<nav class="dots" id="dots"></nav>
+
+<header class="hero">
+  <div class="eyebrow">a hardware security field note — in pictures</div>
+  <h1 class="title">Two halves of a secret <em>should never meet.</em><br>Watch what the router does anyway.</h1>
+  <div class="scrolldown"><div class="ln"></div>scroll</div>
+</header>
+
+<!-- 1. LEAK -->
+<section id="s1">
+  <div class="wrap">
+    <div class="scene-head reveal">
+      <div class="kicker"><span>01</span> · why any of this matters</div>
+      <h2>A chip's power draw gives away what it's computing.</h2>
+    </div>
+    <div class="figure reveal">
+      <canvas id="scope"></canvas>
+      <div class="scope-legend">
+        <span><i class="dot" style="background:var(--share-a)"></i>bit = 0</span>
+        <span><i class="dot" style="background:var(--share-b)"></i>bit = 1</span>
+      </div>
+    </div>
+    <p class="caption">Same circuit, different bit → a slightly different power trace, every time. Watch enough traces and the secret falls out statistically. This is a <b>side-channel</b>.</p>
+  </div>
+</section>
+
+<!-- 2. MASKING -->
+<section class="dark-band" id="s2">
+  <div class="wrap">
+    <div class="scene-head reveal">
+      <div class="kicker"><span>02</span> · the defense</div>
+      <h2>Split the secret. Neither half leaks anything alone.</h2>
+    </div>
+    <div class="figure reveal split-wrap">
+      <svg id="splitSvg" viewBox="0 0 640 260" width="100%"></svg>
+    </div>
+    <p class="caption"><b>secret</b> → <span style="color:var(--share-a)">share A</span> (pure noise) + <span style="color:var(--share-b)">share B</span> (pure noise). Only when both meet does the secret exist again — and a safe design never lets that meeting happen anywhere probeable.</p>
+  </div>
+</section>
+
+<!-- 3. FPGA ANATOMY -->
+<section id="s3">
+  <div class="wrap">
+    <div class="scene-head reveal">
+      <div class="kicker"><span>03</span> · the chip, from zero</div>
+      <h2>An FPGA is a tiny city. Watch one block of it.</h2>
+    </div>
+    <div class="city-wrap reveal">
+      <svg id="citySvg" viewBox="0 0 800 300"></svg>
+      <div id="citystate">building A wants to reach building B. the light decides if it can.</div>
+      <div class="tap-hint">tap the traffic light to flip it yourself</div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. THE GAP -->
+<section class="dark-band" id="s4">
+  <div class="wrap">
+    <div class="scene-head reveal">
+      <div class="kicker"><span>04</span> · where it breaks</div>
+      <h2>Fenced apart. Wired together anyway.</h2>
+    </div>
+    <div class="figure reveal">
+      <svg viewBox="0 0 880 340" width="100%" style="display:block; border-radius:14px; overflow:hidden;">
+        <defs>
+          <filter id="g1" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <rect width="880" height="340" fill="#040609"/>
+        <g stroke="#121d29" stroke-width="1">
+          <path d="M0 40H880 M0 80H880 M0 120H880 M0 160H880 M0 200H880 M0 240H880 M0 280H880 M0 320H880
+                   M40 0V340 M120 0V340 M200 0V340 M280 0V340 M360 0V340 M440 0V340 M520 0V340
+                   M600 0V340 M680 0V340 M760 0V340 M840 0V340"/>
+        </g>
+        <rect x="24" y="34" width="230" height="150" fill="none" stroke="#35e0e8" stroke-width="1.5" stroke-dasharray="6 4" opacity="0.55"/>
+        <text x="30" y="26" font-family="IBM Plex Mono, monospace" font-size="12" fill="#35e0e8">share A pblock</text>
+        <rect x="24" y="200" width="230" height="120" fill="none" stroke="#ff5fd6" stroke-width="1.5" stroke-dasharray="6 4" opacity="0.55"/>
+        <text x="30" y="336" font-family="IBM Plex Mono, monospace" font-size="12" fill="#ff5fd6">share B pblock</text>
+        <rect x="600" y="150" width="42" height="42" fill="#2a0a0e" stroke="#ff5a4d" stroke-width="1.5"/>
+        <text x="560" y="140" font-family="IBM Plex Mono, monospace" font-size="12" fill="#ff9b91">shared switch-box</text>
+        <path id="pA" d="M 140,105 C 320,105 440,115 610,168" fill="none" stroke="#35e0e8" stroke-width="2" opacity="0.3"/>
+        <path id="pB" d="M 140,260 C 340,260 480,235 630,178" fill="none" stroke="#ff5fd6" stroke-width="2" opacity="0.3"/>
+        <g filter="url(#g1)">
+          <circle r="5.5" fill="#35e0e8"><animateMotion dur="3.4s" repeatCount="indefinite"><mpath href="#pA"/></animateMotion></circle>
+          <circle r="5.5" fill="#ff5fd6"><animateMotion dur="3.4s" repeatCount="indefinite"><mpath href="#pB"/></animateMotion></circle>
+        </g>
+        <g opacity="0">
+          <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.78;0.85;0.93;1" dur="3.4s" repeatCount="indefinite"/>
+          <rect x="594" y="144" width="54" height="54" fill="none" stroke="#ff5a4d" stroke-width="3"/>
+          <text x="500" y="235" font-family="IBM Plex Mono, monospace" font-size="14" fill="#ff8f85" font-weight="600">both shares, same instant</text>
+        </g>
+      </svg>
+    </div>
+    <p class="caption">Pblocks fence off <b>placement</b>. Nothing fences off <b>routing</b> — the wires between fenced regions can still cross the same junction.</p>
+  </div>
+</section>
+
+<!-- 5. FINDINGS PIPELINE -->
+<section id="s5">
+  <div class="wrap">
+    <div class="scene-head reveal">
+      <div class="kicker"><span>05</span> · what actually happened, on real hardware</div>
+      <h2>Six tries. One of them finally closes what can be closed.</h2>
+    </div>
+
+    <div class="pipeline reveal">
+      <div class="pstep ok">
+        <div class="picon"><svg viewBox="0 0 100 70" width="90"><circle cx="30" cy="35" r="9" fill="#35e0e8" opacity="0.9"/><circle cx="38" cy="35" r="9" fill="#ff5fd6" opacity="0.9"/><text x="50" y="60" font-family="IBM Plex Mono" font-size="8" fill="#4a6070">default: 0 apart</text></svg></div>
+        <div class="pnum">M0 baseline</div>
+        <div class="pstat">83</div>
+        <div class="plabel">min. tile-distance after a hard pblock fence (was 0 by default)</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="pstep neutral">
+        <div class="picon"><svg viewBox="0 0 100 70" width="90"><g stroke="#1c2b3a"><path d="M10 10H90M10 30H90M10 50H90M10 70H90M10 10V70M30 10V70M50 10V70M70 10V70M90 10V70"/></g><circle cx="50" cy="40" r="4" fill="#ff5a4d"><animate attributeName="opacity" values="1;0.2;1" dur="1.4s" repeatCount="indefinite"/></circle></svg></div>
+        <div class="pnum">M1 scan (novel)</div>
+        <div class="pstat">28 → 2</div>
+        <div class="plabel">cross-share conflicts found, collapsing to 2 physical tiles — under 3 seconds</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="pstep fail">
+        <div class="picon"><svg viewBox="0 0 100 70" width="90"><path d="M15 55 Q50 10 85 55" stroke="#4a6070" stroke-width="2" fill="none" stroke-dasharray="4 3"/><line x1="42" y1="30" x2="58" y2="46" stroke="#ff5a4d" stroke-width="3"/><line x1="58" y1="30" x2="42" y2="46" stroke="#ff5a4d" stroke-width="3"/></svg></div>
+        <div class="pnum">M2 / M2b reroute</div>
+        <div class="pstat">0 / 9</div>
+        <div class="plabel">conflicting nets fixed by 3 independent reroute strategies</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="pstep fail">
+        <div class="picon"><svg viewBox="0 0 100 70" width="90"><rect x="20" y="40" width="14" height="20" fill="#35e0e8"/><rect x="43" y="25" width="14" height="35" fill="#ffb648"/><rect x="66" y="10" width="14" height="50" fill="#ff5a4d"/></svg></div>
+        <div class="pnum">M3 / M3b router patch</div>
+        <div class="pstat">3→7</div>
+        <div class="plabel">conflicts rose, not fell, as the cost-function constraint tightened</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="pstep ok">
+        <div class="picon"><svg viewBox="0 0 100 70" width="90"><path d="M20 38 L42 56 L82 16" stroke="#7bffb0" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="pnum">M3c placement search</div>
+        <div class="pstat">3→0</div>
+        <div class="plabel">avoidable open-fabric conflicts closed by hand-tuned placement geometry — 2 co-located-terminal conflicts remain, structural not routing</div>
+      </div>
+    </div>
+
+    <div class="figure reveal" id="chartFig" style="margin-top:56px;">
+      <div class="chart-card"><div id="chart"></div></div>
+    </div>
+    <p class="caption">Ban a tile and traffic doesn't vanish — it moves to the next-nearest junction. A later hand-tuned placement search (M3c) finally closed every conflict traffic <i>could</i> move away from. Two conflicts, confirmed two independent ways, had nowhere left to move to at all.</p>
+
+    <div class="stat-row reveal" style="margin-top:48px;">
+      <div class="stat"><div class="num d">0</div><div class="lbl">tool-level guarantee that routing respects share isolation</div></div>
+      <div class="stat"><div class="num a">1</div><div class="lbl">from-scratch 2-share AND gadget, Artix-7</div></div>
+      <div class="stat"><div class="num o">2</div><div class="lbl">conflicts structurally unavoidable, confirmed 2 ways</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. TVLA (separate device/experiment line) -->
+<section class="dark-band" id="s6">
+  <div class="wrap">
+    <div class="scene-head reveal">
+      <div class="kicker"><span>06</span> · a separate chip, a separate question</div>
+      <h2>Does the synthesized logic leak? A simulated proxy says: not yet, not here.</h2>
+    </div>
+    <p class="caption" style="margin-bottom:26px;">This is a <b>different device and a different experiment line</b> from the XCZU2 routing work above — a conventionally-synthesized 2-share AND gadget on <b>XC7A100T (Artix-7)</b>, evaluated with simulated Welch's t-test (TVLA) leakage proxies, not the switchbox conflict analysis.</p>
+    <div class="figure reveal">
+      <div class="chart-card" style="max-width:640px;">
+        <div class="stat-row" style="border:none; margin-top:0;">
+          <div class="stat" style="background:transparent;"><div class="num o">1.240</div><div class="lbl">worst |t|, RTL simulation</div></div>
+          <div class="stat" style="background:transparent;"><div class="num o">1.280</div><div class="lbl">worst |t|, gate-level simulation</div></div>
+          <div class="stat" style="background:transparent;"><div class="num a">4.5</div><div class="lbl">TVLA threshold — not exceeded</div></div>
+        </div>
+      </div>
+    </div>
+    <p class="caption">Both figures are <b>simulated TVLA proxies</b>, not physical FPGA power or EM measurements — no silicon was measured. A follow-on second-order (pairwise) TVLA pass is <b>currently on hold</b>: the stimulus construction used to test share pairs forces a same-variable correlation, which confounds the result before it can be read as a leakage finding.</p>
+  </div>
+</section>
+
+<!-- 7. CURRENT STATUS / LIMITATIONS -->
+<section id="s7">
+  <div class="wrap">
+    <div class="scene-head reveal">
+      <div class="kicker"><span>07</span> · what's actually established, right now</div>
+      <h2>Structural evidence on routing. Simulated evidence on leakage. Not yet the same claim.</h2>
+    </div>
+    <div class="figure reveal" style="max-width:760px; margin:0 auto; display:grid; gap:14px;">
+      <div style="background:var(--bg-card); border:1px solid var(--line); border-left:3px solid var(--ok); border-radius:10px; padding:16px 20px;">
+        <div style="font-family:var(--mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ok); margin-bottom:6px;">structural evidence — XCZU2 routing</div>
+        <div style="font-family:var(--mono); font-size:13.5px; color:var(--ink-dim); line-height:1.7;">Every avoidable cross-share switchbox conflict is closed (M3c, milestone chain M1 → M3 → M3b → M3c). Two conflicts remain, confirmed structural by two independent methods — this is routing-geometry evidence only, not a claim of physical leakage resistance.</div>
+      </div>
+      <div style="background:var(--bg-card); border:1px solid var(--line); border-left:3px solid var(--share-a); border-radius:10px; padding:16px 20px;">
+        <div style="font-family:var(--mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--share-a); margin-bottom:6px;">simulation evidence — XC7A100T TVLA</div>
+        <div style="font-family:var(--mono); font-size:13.5px; color:var(--ink-dim); line-height:1.7;">First-order TVLA proxies (RTL and gate-level) stay under threshold, on the separate M4 / TVLA experiment line — a different device and a different implementation from the XCZU2 routing result above.</div>
+      </div>
+      <div style="background:var(--bg-card); border:1px solid var(--line); border-left:3px solid var(--amber); border-radius:10px; padding:16px 20px;">
+        <div style="font-family:var(--mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--amber); margin-bottom:6px;">not yet linked</div>
+        <div style="font-family:var(--mono); font-size:13.5px; color:var(--ink-dim); line-height:1.7;">Same-lineage leakage validation of the XCZU2 M3c implementation is not currently established — the routing result and the TVLA result speak to two different builds, and are never combined into one statistic.</div>
+      </div>
+      <div style="background:var(--bg-card); border:1px solid var(--line); border-left:3px solid var(--danger); border-radius:10px; padding:16px 20px;">
+        <div style="font-family:var(--mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--danger); margin-bottom:6px;">on hold / not established</div>
+        <div style="font-family:var(--mono); font-size:13.5px; color:var(--ink-dim); line-height:1.7;">Genuine second-order TVLA validation is on hold — the current stimulus construction confounds same-variable share pairs. No physical power/EM measurement has been performed on any device.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="rule"></div>
+    <div class="signoff">Two shares, one router, and a gap the toolchain never promised to close.</div>
+    <div class="meta">
+      Krss — B.E. ECE, Sathyabama Institute of Science and Technology, Chennai · Research guidance: Dr. G. Rajalakshmi<br>
+      Vivado / RapidWright 2026.1 · Java 24 · Python 3.13<br>
+      <a href="https://github.com/krss-94/physical-separation-verification">Repository</a> · Full write-up — <a href="docs/PROJECT_SUMMARY.md">docs/PROJECT_SUMMARY.md</a> · MIT License
+    </div>
+  </div>
+</footer>
+
+<script>
+// progress rail
+const rail = document.getElementById('rail');
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  rail.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100) + '%';
+}, {passive:true});
+
+// nav dots
+const sections = [...document.querySelectorAll('section[id]')];
+const dotsNav = document.getElementById('dots');
+sections.forEach(s => { const a = document.createElement('a'); a.href = '#'+s.id; a.dataset.target = s.id; dotsNav.appendChild(a); });
+const dotEls = [...dotsNav.querySelectorAll('a')];
+new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting){ dotEls.forEach(d=>d.classList.remove('active')); dotsNav.querySelector(`a[data-target="${e.target.id}"]`).classList.add('active'); } });
+}, {threshold:0.4}).observe ? sections.forEach(s => new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){dotEls.forEach(d=>d.classList.remove('active'));dotsNav.querySelector(`a[data-target="${e.target.id}"]`).classList.add('active');}});},{threshold:0.4}).observe(s)) : null;
+
+// reveal
+new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }); }, {threshold:0.12})
+  && document.querySelectorAll('.reveal').forEach(el => new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});},{threshold:0.12}).observe(el));
+
+// oscilloscope
+const scopeCanvas = document.getElementById('scope');
+const ctx = scopeCanvas.getContext('2d');
+const t0 = performance.now();
+function resizeScope(){
+  const rect = scopeCanvas.getBoundingClientRect();
+  scopeCanvas.width = rect.width * devicePixelRatio;
+  scopeCanvas.height = rect.height * devicePixelRatio;
+  ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+}
+resizeScope();
+window.addEventListener('resize', resizeScope);
+function drawScope(now){
+  const w = scopeCanvas.clientWidth, h = scopeCanvas.clientHeight;
+  ctx.clearRect(0,0,w,h);
+  ctx.strokeStyle = 'rgba(53,224,232,0.06)'; ctx.lineWidth = 1;
+  for(let x=0;x<w;x+=30){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); }
+  for(let y=0;y<h;y+=30){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
+  const phase = ((now - t0) / 1000) % 8;
+  const scanX = (phase/8) * w;
+  function trace(color, ampMul, seed){
+    ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.shadowColor = color; ctx.shadowBlur = 7;
+    for(let x=0; x<=scanX; x++){
+      const base = Math.sin(x*0.09)*8 + Math.sin(x*0.02+seed)*5;
+      const spike = (Math.sin(x*0.15+seed*3) > 0.965) ? 16*ampMul : 0;
+      const noise = (Math.sin(x*1.7+seed) * Math.cos(x*0.31)) * 3;
+      const y = h/2 - (base*ampMul + spike + noise);
+      x===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+    }
+    ctx.stroke(); ctx.shadowBlur = 0;
+  }
+  trace('#35e0e8', 1, 1);
+  trace('#ff5fd6', 1.35, 7);
+  ctx.strokeStyle = 'rgba(238,246,250,0.5)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(scanX,0); ctx.lineTo(scanX,h); ctx.stroke();
+  requestAnimationFrame(drawScope);
+}
+requestAnimationFrame(drawScope);
+
+// masking split visual (SVG built via JS, animated loop)
+const splitSvg = document.getElementById('splitSvg');
+splitSvg.innerHTML = `
+  <defs>
+    <filter id="gg" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <text x="320" y="24" text-anchor="middle" font-family="IBM Plex Mono" font-size="12" fill="#4a6070">secret</text>
+  <circle id="secretDot" cx="320" cy="40" r="10" fill="#eef6fa"/>
+  <circle id="shareADot" cx="320" cy="150" r="9" fill="#35e0e8" filter="url(#gg)"/>
+  <circle id="shareBDot" cx="320" cy="150" r="9" fill="#ff5fd6" filter="url(#gg)"/>
+  <text x="120" y="230" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#35e0e8">share A — noise</text>
+  <text x="520" y="230" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#ff5fd6">share B — noise</text>
+  <g id="noiseA"></g>
+  <g id="noiseB"></g>
+`;
+// scatter faint noise dots around each share's resting position to sell "random"
+function scatterNoise(id, cx, cy, color){
+  const g = document.getElementById(id);
+  let html = '';
+  for(let i=0;i<10;i++){
+    const ang = Math.random()*Math.PI*2, r = 14+Math.random()*22;
+    html += `<circle cx="${cx+Math.cos(ang)*r}" cy="${cy+Math.sin(ang)*r}" r="${1+Math.random()*2}" fill="${color}" opacity="${0.15+Math.random()*0.25}"/>`;
+  }
+  g.innerHTML = html;
+}
+scatterNoise('noiseA', 120, 200, '#35e0e8');
+scatterNoise('noiseB', 520, 200, '#ff5fd6');
+
+let splitLoopRunning = false;
+let splitInView = false;
+function setSplitState(apart){
+  const secretDot = document.getElementById('secretDot');
+  const a = document.getElementById('shareADot');
+  const b = document.getElementById('shareBDot');
+  const noiseA = document.getElementById('noiseA');
+  const noiseB = document.getElementById('noiseB');
+  a.style.transition = 'cx 1.1s cubic-bezier(.2,.8,.2,1), cy 1.1s cubic-bezier(.2,.8,.2,1)';
+  b.style.transition = 'cx 1.1s cubic-bezier(.2,.8,.2,1), cy 1.1s cubic-bezier(.2,.8,.2,1)';
+  secretDot.style.transition = 'opacity .5s ease';
+  noiseA.style.transition = 'opacity .6s ease';
+  noiseB.style.transition = 'opacity .6s ease';
+  if (apart){
+    secretDot.style.opacity = 0;
+    a.setAttribute('cx',120); a.setAttribute('cy',200);
+    b.setAttribute('cx',520); b.setAttribute('cy',200);
+    noiseA.style.opacity = 1; noiseB.style.opacity = 1;
+  } else {
+    a.setAttribute('cx',320); a.setAttribute('cy',150);
+    b.setAttribute('cx',320); b.setAttribute('cy',150);
+    noiseA.style.opacity = 0; noiseB.style.opacity = 0;
+    setTimeout(()=>{ secretDot.style.opacity = 1; }, 900);
+  }
+}
+async function splitLoop(){
+  if (splitLoopRunning) return;
+  splitLoopRunning = true;
+  let apart = false;
+  while (splitInView){
+    setSplitState(apart);
+    apart = !apart;
+    await new Promise(r => setTimeout(r, apart ? 1300 : 2600));
+  }
+  splitLoopRunning = false;
+}
+new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    splitInView = e.isIntersecting;
+    if (splitInView) splitLoop();
+  });
+}, {threshold:0.4}).observe(document.getElementById('splitSvg'));
+
+// city intersection illustration — literal buildings, road, traffic light
+const citySvg = document.getElementById('citySvg');
+citySvg.innerHTML = `
+  <defs>
+    <filter id="cg" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="800" height="300" fill="#040609"/>
+  <g stroke="#111d29" stroke-width="1">
+    <path d="M0 60H800 M0 240H800 M100 0V300 M700 0V300"/>
+  </g>
+
+  <!-- building A (LUT) -->
+  <g>
+    <rect x="60" y="110" width="110" height="90" rx="4" fill="#123138" stroke="#35e0e8" stroke-width="1.5"/>
+    <rect x="80" y="130" width="18" height="18" fill="#35e0e8" opacity="0.5"/>
+    <rect x="112" y="130" width="18" height="18" fill="#35e0e8" opacity="0.5"/>
+    <rect x="80" y="160" width="18" height="18" fill="#35e0e8" opacity="0.5"/>
+    <rect x="112" y="160" width="18" height="18" fill="#35e0e8" opacity="0.5"/>
+    <text x="115" y="96" text-anchor="middle" font-family="IBM Plex Mono" font-size="14" fill="#35e0e8" font-weight="600">LUT</text>
+    <text x="115" y="228" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#5a7284">does the computing</text>
+  </g>
+
+  <!-- building B (LUT) -->
+  <g>
+    <rect x="630" y="110" width="110" height="90" rx="4" fill="#123138" stroke="#35e0e8" stroke-width="1.5"/>
+    <rect x="650" y="130" width="18" height="18" fill="#35e0e8" opacity="0.5"/>
+    <rect x="682" y="130" width="18" height="18" fill="#35e0e8" opacity="0.5"/>
+    <rect x="650" y="160" width="18" height="18" fill="#35e0e8" opacity="0.5"/>
+    <rect x="682" y="160" width="18" height="18" fill="#35e0e8" opacity="0.5"/>
+    <text x="685" y="96" text-anchor="middle" font-family="IBM Plex Mono" font-size="14" fill="#35e0e8" font-weight="600">LUT</text>
+    <text x="685" y="228" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#5a7284">does the computing</text>
+  </g>
+
+  <!-- roads (wires) -->
+  <line x1="170" y1="155" x2="360" y2="155" stroke="#233242" stroke-width="10"/>
+  <line x1="170" y1="155" x2="360" y2="155" stroke="#3a4d5f" stroke-width="1.5" stroke-dasharray="10 8"/>
+  <line x1="440" y1="155" x2="630" y2="155" stroke="#233242" stroke-width="10"/>
+  <line x1="440" y1="155" x2="630" y2="155" stroke="#3a4d5f" stroke-width="1.5" stroke-dasharray="10 8"/>
+  <text x="265" y="130" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#5a7284">wire — plain copper</text>
+
+  <!-- intersection (switch-box) -->
+  <rect x="360" y="115" width="80" height="80" rx="6" fill="#2e1330" stroke="#ff5fd6" stroke-width="1.5"/>
+  <text x="400" y="105" text-anchor="middle" font-family="IBM Plex Mono" font-size="13" fill="#ff5fd6" font-weight="600">switch-box</text>
+  <text x="400" y="228" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#5a7284">the intersection</text>
+
+  <!-- traffic light (PIP) -->
+  <line x1="400" y1="115" x2="400" y2="70" stroke="#3a4d5f" stroke-width="3"/>
+  <rect x="388" y="46" width="24" height="26" rx="4" fill="#0d1420" stroke="#4a6070"/>
+  <circle id="pipLight" cx="400" cy="59" r="7" fill="#ff5a4d" filter="url(#cg)"/>
+  <text x="400" y="34" text-anchor="middle" font-family="IBM Plex Mono" font-size="12" fill="#ffb648" font-weight="600">PIP</text>
+  <rect id="pipHit" x="378" y="40" width="44" height="42" fill="transparent" style="cursor:pointer;"/>
+
+  <!-- car / signal -->
+  <circle id="carDot" cx="140" cy="155" r="7" fill="#7bffb0" filter="url(#cg)"/>
+`;
+
+const pipLight = document.getElementById('pipLight');
+const carDot = document.getElementById('carDot');
+const cityState = document.getElementById('citystate');
+const pipHit = document.getElementById('pipHit');
+
+let pipOn = false;
+let cityPaused = false;
+let carX = 140;
+let carPhase = 'toIntersection'; // toIntersection -> waiting -> crossing -> arrived -> reset
+
+function setPip(on){
+  pipOn = on;
+  pipLight.setAttribute('fill', on ? '#7bffb0' : '#ff5a4d');
+}
+
+function setCityMsg(html){ cityState.innerHTML = html; }
+
+function cityTick(){
+  const speed = 2.6;
+  if (carPhase === 'toIntersection'){
+    carX += speed;
+    if (carX >= 372){ carX = 372; carPhase = 'waiting'; }
+  } else if (carPhase === 'waiting'){
+    setCityMsg(pipOn
+      ? '<b style="color:#7bffb0">PIP is on</b> — the path exists, the signal crosses'
+      : '<b style="color:#ff5a4d">PIP is off</b> — dead end, nothing gets through here');
+    if (pipOn) carPhase = 'crossing';
+  } else if (carPhase === 'crossing'){
+    carX += speed;
+    if (carX >= 630){ carX = 630; carPhase = 'arrived'; }
+  } else if (carPhase === 'arrived'){
+    setCityMsg('<b style="color:#35e0e8">reached building B</b> — same trip, resetting');
+    setTimeout(()=>{ carX = 140; carPhase = 'toIntersection'; }, 900);
+    carPhase = 'holding';
+  }
+  carDot.setAttribute('cx', carX);
+  requestAnimationFrame(cityTick);
+}
+requestAnimationFrame(cityTick);
+
+// light auto-toggles unless the user takes over
+function autoToggle(){
+  if (!cityPaused) setPip(!pipOn);
+}
+setPip(false);
+setInterval(autoToggle, 3400);
+
+pipHit.addEventListener('click', () => {
+  cityPaused = true;
+  setPip(!pipOn);
+});
+
+// escalation chart
+const chartData = [
+  {label:'baseline', value:3, color:'#35e0e8'},
+  {label:'soft penalty', value:6, color:'#ffb648'},
+  {label:'hard exclusion', value:7, color:'#ff5a4d'},
+  {label:'M3c placement', value:0, color:'#7bffb0'},
+];
+const chartEl = document.getElementById('chart');
+const maxV = Math.max(...chartData.map(d=>d.value));
+chartData.forEach(d => {
+  const col = document.createElement('div');
+  col.className = 'col';
+  col.innerHTML = `
+    <div class="barnum" style="font-family:'IBM Plex Mono',monospace; font-size:22px; font-weight:600; color:${d.color}; opacity:0;">${d.value}</div>
+    <div class="bar" style="background:${d.color}; box-shadow:0 0 18px ${d.color}55;"></div>
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--ink-faint); margin-top:10px; text-align:center;">${d.label}</div>
+  `;
+  col.dataset.target = (d.value/maxV*100);
+  chartEl.appendChild(col);
+});
+let chartPlayed = false;
+new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting && !chartPlayed){
+      chartPlayed = true;
+      chartEl.querySelectorAll('.bar').forEach((bar, i) => {
+        const col = bar.parentElement;
+        setTimeout(() => {
+          bar.style.height = col.dataset.target + '%';
+          col.querySelector('.barnum').style.transition = 'opacity .5s ease';
+          col.querySelector('.barnum').style.opacity = 1;
+        }, i*220);
+      });
+    }
+  });
+}, {threshold:0.5}).observe(document.getElementById('chartFig'));
+</script>
+</body>
+</html>
