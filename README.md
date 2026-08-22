@@ -8,7 +8,7 @@
 ![Python](https://img.shields.io/badge/Python-3.13-0a0e17?style=for-the-badge&logo=python&logoColor=7cffcb&labelColor=0a0e17&color=0a0e17)
 ![Java](https://img.shields.io/badge/Java-24-0a0e17?style=for-the-badge&logo=openjdk&logoColor=ff9b3b&labelColor=0a0e17&color=0a0e17)
 ![Toolchain](https://img.shields.io/badge/Vivado%20%2F%20RapidWright-2026.1-0a0e17?style=for-the-badge&labelColor=0a0e17&color=ff4fd8)
-![Status](https://img.shields.io/badge/status-research--complete-0a0e17?style=for-the-badge&labelColor=0a0e17&color=7cffcb)
+![Status](https://img.shields.io/badge/status-simulation--scope--complete-0a0e17?style=for-the-badge&labelColor=0a0e17&color=7cffcb)
 
 <br/>
 
@@ -29,7 +29,7 @@
 
 <br/>
 
-> **TL;DR** — Pblock containment fixes *where cells sit*, not *how nets route*. On a from-scratch 2-share AND gadget, three independently-built automated rerouting strategies — including a patched RapidWright router — all failed to eliminate cross-share switch-box conflicts, and tightening the router's own cost function made things *worse*, not better. A follow-on hand-tuned placement-geometry search (M3c) later closed every *avoidable* conflict, leaving **2 conflicts confirmed structurally unavoidable** on this device — by two independent methods. Separately, a full security test suite (exhaustive functional correctness, Hamming-Weight and Hamming-Distance TVLA proxies, and now-resolved SDF timing-annotated TVLA) found no detectable leakage in any tested simulated proxy — but **no physical power/EM measurement was ever performed**, a structural placement analysis on the active xc7a100t build found both shares' logic co-located in the same site under the current unconstrained placement, and the project's broader second-order/joint leakage security remains **not established**.
+> **TL;DR** — Pblock containment fixes *where cells sit*, not *how nets route*. On a from-scratch 2-share AND gadget, three independently-built automated rerouting strategies — including a patched RapidWright router — all failed to eliminate cross-share switch-box conflicts, and tightening the router's own cost function made things *worse*, not better. A follow-on hand-tuned placement-geometry search (M3c) later closed every *avoidable* conflict, leaving **2 conflicts confirmed structurally unavoidable** on this device — by two independent methods. Separately, a full security test suite (exhaustive functional correctness, Hamming-Weight and Hamming-Distance TVLA proxies, and now-resolved SDF timing-annotated TVLA) found no detectable leakage in any tested simulated proxy — but **no physical power/EM measurement was ever performed**, a structural placement analysis on the active xc7a100t build found both shares' logic co-located in the same site under the current unconstrained placement, and the project's broader second-order/joint leakage security remains **not established** (the fixed-vs-random TVLA construction itself is structurally confounded for same-variable share pairs, not merely awaiting a stimulus tweak). A follow-on **Constraint Repair v1** experiment found the residual xc7a100t co-location was an avoidable XDC coverage gap rather than a structural one, and closed it with no additional LUT count and no further timing cost beyond the 0.062 ns WNS reduction separation already paid — a single-instance result, not a demonstrated general fix.
 
 <br/>
 
@@ -48,7 +48,7 @@ This repository holds the code, constraints, and evidence for an empirical study
 
 - [The concept, in real time](#the-concept-in-real-time)
 - [Results at a glance](#results-at-a-glance)
-- [Security test suite (TEST 1–7)](#security-test-suite-test-1-7)
+- [Security test suite (TEST 1–8)](#security-test-suite-test-1-8)
 - [Pipeline](#pipeline)
 - [Why this exists](#why-this-exists)
 - [How this compares to prior work](#how-this-compares-to-prior-work)
@@ -97,9 +97,9 @@ Full per-file provenance for every checkpoint and result: **[`results/INDEX.md`]
 
 <br/>
 
-## Security test suite (TEST 1–7)
+## Security test suite (TEST 1–8)
 
-A separate, more complete security investigation was run against the active `xc7a100t` build (the same device/lineage as M4 above). It extends M4's TVLA work with exhaustive functional verification, a second leakage-proxy metric, second-order analysis, structural placement analysis, and a resolved SDF-timing TVLA run. Every result below is one of four explicit categories — **VERIFIED**, **VERIFIED UNDER SIMULATION MODEL**, **STRUCTURAL EVIDENCE**, or **NOT ESTABLISHED** — and none of them establishes physical side-channel security.
+A separate, more complete security investigation was run against the active `xc7a100t` build (the same device/lineage as M4 above). It extends M4's TVLA work with exhaustive functional verification, a second leakage-proxy metric, second-order analysis, structural placement analysis, a resolved SDF-timing TVLA run, and a follow-on constraint-repair experiment. Every result below is one of four explicit categories — **VERIFIED**, **VERIFIED UNDER SIMULATION MODEL**, **STRUCTURAL EVIDENCE**, or **NOT ESTABLISHED** — and none of them establishes physical side-channel security.
 
 <div align="center">
 
@@ -109,10 +109,11 @@ A separate, more complete security investigation was run against the active `xc7
 | **2 — Share-reconstruction invariant** | Reconstruction correctness across the same 32 combinations | Correct for all 32 | VERIFIED (RTL simulation) |
 | **3 — Hamming-Weight TVLA proxy** | Welch's t-test, 20,000 fixed / 20,000 random traces | Worst \|t\| = **1.240** (RTL) / **1.280** (gate-level, no SDF); signal `a_sh0_r`. Threshold 4.5 — not exceeded | VERIFIED UNDER SIMULATION MODEL |
 | **3b — Hamming-Distance TVLA proxy** | Cycle-to-cycle toggle activity, same trace populations | Worst \|t\| = **2.210** (RTL) / **2.270** (gate-level, no SDF); signal `a_sh0_r`. Threshold 4.5 — not exceeded | VERIFIED UNDER SIMULATION MODEL |
-| **4 — Second-order / bivariate analysis** | Joint leakage across signal pairs | The original fixed-population stimulus forces `a_sh1 = a_sh0` and `b_sh1 = b_sh0`, which algebraically collapses several internal terms — the original pairwise \|t\| values are **confounded and not reported as leakage findings**. Tested *non-tautological* cross-variable pairs show no detectable joint leakage under the current stimulus/model. Same-variable share pairs (`a_sh0_r`/`a_sh1_r`, `b_sh0_r`/`b_sh1_r`) remain untestable under this stimulus construction | Tested subset: VERIFIED UNDER SIMULATION MODEL · broader property: **NOT ESTABLISHED** |
-| **5 — xc7a100t structural placement analysis** | Share-tagged register/LUT placement, Manhattan distance, routing-tile overlap, BEL/SITE co-location (unconstrained build — no share-separation XDC applied) | **0** shared general-fabric routing tiles across all 5 examined pairs, but `b_sh0_r`/`b_sh1_r` sit at Manhattan distance **0** (same site), the other 3 pairs at distance **1**, and `SLICE_X52Y100` co-packs all four AND-term LUTs from both shares | STRUCTURAL EVIDENCE |
+| **4 — Second-order / joint-share analysis** | Joint leakage across signal pairs, fixed-vs-random TVLA | Two independent fixed-population stimulus constructions were tried. Both are **structurally confounded** for same-variable share pairs (`a_sh0_r`/`a_sh1_r`, `b_sh0_r`/`b_sh1_r`): fixing the secret makes the two shares deterministically related, so the masking invariant itself gets encoded in the population label, producing large pairwise \|t\| values that are not interpretable as leakage. Changing the fixed value changes the confound's shape, not its root cause. Tested *non-tautological* cross-variable pairs show no detectable joint leakage under the current stimulus/model | Tested subset: VERIFIED UNDER SIMULATION MODEL · same-variable pairs: **NOT ESTABLISHED / methodology requires redesign** |
+| **5 — xc7a100t structural placement analysis** | Share-tagged register/LUT placement, Manhattan distance, routing-tile overlap, BEL/SITE co-location (unconstrained build — no share-separation XDC applied) | **0** shared general-fabric routing tiles across all 5 examined pairs, but `b_sh0_r`/`b_sh1_r` sit at Manhattan distance **0** (same site), the other 3 pairs at distance **1**, and `SLICE_X52Y100` co-packs all four AND-term LUTs from both shares. Zero shared routing tiles does **not** imply physical separation — a routing-tile diff cannot see intra-site sharing | STRUCTURAL EVIDENCE |
 | **6 — xczu2 switchbox experiment** *(separate device/experiment — see M3c above)* | Cross-share switchbox conflicts after the M3c placement search | 2 events, both `co_located_terminal`; `open_fabric_count = 0` | STRUCTURAL EVIDENCE |
 | **7 — SDF post-route timing simulation** | Full 40,000-cycle TVLA run against the real post-route netlist with SDF timing delays annotated (`simprims_ver` library resolved the earlier blocker) | HW worst \|t\| = **1.280**, HD worst \|t\| = **2.270**, signal `a_sh0_r` in both. Threshold 4.5 — not exceeded | VERIFIED UNDER SIMULATION MODEL |
+| **8 — Constraint Repair v1** *(follow-on to Test 5, same xc7a100t lineage)* | Baseline → original share-separation XDC → repaired XDC, cross-share term-LUT placement coverage | Baseline: 0-tile register distance, `cross01`/`cross10` co-located with mixed-share cells in `SLICE_X52Y100`. Original XDC: 29-tile register distance, but `cross10` fell outside the naming-based pblock selector and was orphaned at `SLICE_X59Y99`. Repaired XDC: 29-tile register distance, both cross-share term LUTs correctly pinned, **0** cross-share shared routing tiles, **0** cross-share mixing in any examined site, **10 LUTs in all three builds (no overhead)**, WNS 5.501 ns (unchanged from original XDC), fully routed, 0 routing errors, 1 unrelated `CFGBVS-1` DRC warning | STRUCTURAL EVIDENCE |
 
 </div>
 
@@ -126,6 +127,35 @@ A separate, more complete security investigation was run against the active `xc7
 
 **Tests 5 and 6 are not the same implementation and are not combined.** Test 5 is the active `xc7a100t` (Artix-7) build with no share-separation placement constraint applied; Test 6 is the separate `xczu2` (UltraScale+) experiment from M3/M3b/M3c, which *does* use hard pblock containment. A routing-tile diff structurally cannot see intra-site sharing (site PIPs, LUT fracturing, shared control sets), which is why Test 5 shows both "0 shared routing tiles" and same-site co-location at once — the two facts describe different mechanisms, not a contradiction.
 
+### Constraint Repair v1
+
+A follow-on experiment on the same `xc7a100t` lineage as Test 5 investigated whether the co-location Test 5 found was avoidable. `share_separation.xdc` selects cells by a `*_sh0*` / `*_sh1*` instance-name pattern; the cross-share product-term LUTs (`u_and_cross01`, `u_and_cross10`) — the structures the RTL's own header comment flags as highest-risk — aren't named with either suffix, so the original constraint had no basis to place them.
+
+<div align="center">
+
+| Metric | Baseline (no constraint) | v1 (original XDC) | v2 (repaired XDC) |
+|:---|:---:|:---:|:---:|
+| Share-0/share-1 register min. distance | 0 tiles | 29 tiles | 29 tiles |
+| Cross-share term LUT coverage | Both `cross01`/`cross10` co-located with mixed-share cells in `SLICE_X52Y100` | `cross01` incidentally share-1-side; **`cross10` unpinned, orphaned at `SLICE_X59Y99`, outside both pblocks** | **Both `cross01`/`cross10` correctly pinned, one pblock each — zero cross-share mixing in any site** |
+| Cross-share shared routing tiles | not separately tested | not separately tested | **0** |
+| LUTs | 10 | 10 | 10 — no overhead |
+| WNS | 5.563 ns | 5.501 ns | 5.501 ns — unchanged from v1 |
+| Route status | 0 errors | 0 errors | 0 errors |
+| DRC | not run | not run | 1 warning (`CFGBVS-1` — generic OOC I/O-bank config warning, unrelated to placement/separation, not a violation) |
+
+</div>
+
+**Result:** the `cross10` orphan identified in v1 was an **avoidable constraint-coverage gap, not a structural conflict** — expanding the XDC's cell-selection pattern to explicitly match `*cross01*`/`*cross10*` closed it fully, at zero additional LUT cost (10 LUTs in all three builds) and no timing cost beyond what separation already paid in v1 (a real 0.062 ns WNS reduction from baseline, present in both v1 and v2, with 0 failing endpoints in all three builds). Fully routed, 0 routing errors, 1 unrelated DRC warning.
+
+This is a completed, hand-verified, **single-instance** repair: it demonstrates that at least one residual cross-share conflict on this build was avoidable and that the constraint-selection mechanism itself can be fixed — it does not demonstrate general or automated mitigation. Generalizing this hand-run repair into an automated scanner → classifier → constraint-generator → reroute → rescan loop (**M5**) is scoped as future work and has not been started. The stronger research contribution of this project remains the combination of switch-box-level conflict detection, the failed automated rerouting attempts, the root-caused router limitations, the M3c placement-geometry search, the identified structurally-unavoidable conflicts, and the separate security/structural evaluation above — Constraint Repair v1 is an additional, concrete finding within that, not a reframing of it.
+
+### Project status
+
+- Physical conflict detection (M1, xczu2 switch-box scan): **COMPLETE**.
+- Constraint Repair v1 (xc7a100t cross-term XDC coverage repair): **COMPLETE**.
+- M5 — automated scanner → classifier → constraint-generator → reroute → rescan loop: **NOT STARTED**.
+- Multi-gadget / multi-design generalization: **NOT STARTED**.
+
 ### Current security status
 
 **Established / verified**
@@ -137,24 +167,36 @@ A separate, more complete security investigation was run against the active `xc7
 6. Tested non-tautological cross-variable joint signal pairs show no detectable leakage under the current simulated model, scoped strictly to the tested subset.
 
 **Structural evidence**
-7. Zero shared general-fabric routing tiles in the current `xc7a100t` implementation.
+7. Zero shared general-fabric routing tiles in the current, *unconstrained* `xc7a100t` implementation (Test 5) — this does not by itself establish separation; see below.
 8. Separate `xczu2` experiment: zero open-fabric switchbox conflicts, two co-located-terminal events (M3c).
+9. **Constraint Repair v1**: on a separately, explicitly constrained `xc7a100t` build, the cross-share term-LUT co-location Test 5 found was traced to an avoidable XDC coverage gap and closed — zero cross-share site/routing-tile mixing in the repaired build, no additional LUT count, and no timing cost beyond the 0.062 ns WNS reduction separation already paid. Single-instance, hand-verified; not a general or automated result.
 
 **Not established**
 - Physical power/EM side-channel security.
-- Complete second-order / joint statistical security (only a non-tautological subset was tested).
-- Same-variable share-pair second-order security, which the current fixed-population stimulus construction cannot test.
-- Strong share separation in the current `xc7a100t` placement — Test 5 found same-site co-location, and no share-separation constraint was applied in this build.
+- Same-variable second-order/joint leakage evaluation: **NOT ESTABLISHED / methodology requires redesign** — two independent fixed-population TVLA stimulus constructions were tried, and both are structurally confounded for same-variable share pairs (the masking invariant itself gets encoded in the population label). This is not a pending parameter tweak; it requires a different experimental design, such as a properly constructed higher-order CPA using randomized rather than fixed-population traces.
+- Strong share separation in the *unconstrained* `xc7a100t` build characterized by Test 5 — that specific build has no share-separation constraint applied. (A separately constrained build, Constraint Repair v1, does achieve zero cross-share site/routing-tile mixing for the examined pairs, but that is a single-instance, hand-verified result — not a generalized or automated guarantee, and not a claim about Test 5's build.)
+- General or automated detection/repair of constraint-coverage gaps — Constraint Repair v1 fixed one identified gap by hand; the scanner → classifier → constraint-generator → reroute → rescan loop (M5) has not been built.
 - Physical silicon behavior of any kind.
 
 None of the above should be read as "secure," "leak-free," or "side-channel resistant" — those terms are deliberately not used anywhere in this repository. Every result is a specific, scoped statement about a specific simulated model or structural artifact.
 
+**The defined simulation and structural-verification scope is complete. Physical power/EM measurement and genuine higher-order leakage evaluation remain outside the current experimental scope.**
+
 ### Next steps
 
-1. Design a second-order TVLA stimulus construction that does not force same-variable share equality in the fixed population, so same-variable pairs can actually be tested.
-2. Re-run the `xc7a100t` implementation with a share-separation XDC applied and compare placement/routing against this unconstrained baseline.
-3. Continue reporting the `xc7a100t` and `xczu2` experiment lines separately in all structural-security findings.
-4. Pursue physical power/EM measurement — no result in this repository substitutes for it.
+**Completed**
+- Manual, single-instance share-separation experiment (`xc7a100t`, Test 5).
+- Constraint Repair v1 — cross-term XDC coverage repair.
+- SDF timing-annotated gate-level TVLA (Test 7).
+- Second-order TVLA methodology investigation (Test 4).
+
+**Remaining**
+1. Automated M5 scanner → classifier → XDC-generator → reroute → rescan loop.
+2. Multi-gadget / generalization study beyond this single 2-share AND gadget.
+3. A genuine higher-order (e.g. second-order CPA) evaluation methodology that doesn't depend on a fixed-population TVLA construction.
+4. Physical power/EM measurement — no result in this repository substitutes for it.
+5. xczu2 M1 → M3c gate-level comparison, if still applicable to the current checkpoint lineage.
+6. `tb_masked_and_gadget.v` rename/checker fix, if it remains unapplied.
 
 <br/>
 
@@ -172,6 +214,7 @@ flowchart LR
     H -.->|separate device / lineage| I[M4 / TEST1-4<br/>Functional + TVLA proxies]
     I -.->|HW 1.24-1.28, HD 2.21-2.27, below 4.5| J[TEST7<br/>SDF-annotated TVLA: resolved]
     I -.->|unconstrained placement| K[TEST5<br/>xc7a100t co-location, structural]
+    K -.->|coverage gap found, then repaired| L[TEST8<br/>Constraint Repair v1: closed]
 
     style A fill:#0a0e17,stroke:#00e5ff,color:#eafcff
     style B fill:#0a0e17,stroke:#00e5ff,color:#eafcff
@@ -184,6 +227,7 @@ flowchart LR
     style I fill:#0a0e17,stroke:#7cffcb,color:#eafcff
     style J fill:#0a1f14,stroke:#7bffb0,color:#daffe9
     style K fill:#241a05,stroke:#ffb648,color:#ffe9c2
+    style L fill:#0a1f14,stroke:#7bffb0,color:#daffe9
 ```
 
 <br/>
@@ -235,10 +279,22 @@ This project's contribution is narrower and more specific than "physical separat
 │   ├── ultrascale_gadget_build/      Minimal 4-net UltraScale+ gadget, built directly via
 │   │                                  the RapidWright Python API (bypasses Series7 restriction)
 │   └── utils/                        RapidWright API probes, device-load diagnostics
-├── security_tests/                   TEST 1-7 security investigation, xc7a100t
+├── security_tests/                   TEST 1-8 security investigation + Constraint Repair v1, xc7a100t
 │   ├── tb_functional_exhaustive.v    TEST 1/2 — exhaustive functional + share-reconstruction check
 │   ├── tvla_hd_analysis.py           TEST 3b — Hamming-Distance TVLA proxy
-│   └── tb_gatelevel_tvla_sdf.v       TEST 7 — SDF timing-annotated gate-level TVLA testbench
+│   ├── tvla_2nd_order_analysis.py    TEST 4 — second-order/joint-share TVLA (confound investigation)
+│   ├── gen_tvla_stimulus_v2.py       TEST 4 — second stimulus construction tried
+│   ├── stimulus_v2_fixed11.mem       TEST 4 — fixed-population trace input, v2 stimulus
+│   ├── tb_tvla_v2_nondegenerate.v    TEST 4 — testbench, v2 stimulus
+│   ├── tvla_trace_v2_nondegenerate.csv  TEST 4 — trace output, v2 stimulus
+│   ├── tb_gatelevel_tvla_sdf.v       TEST 7 — SDF timing-annotated gate-level TVLA testbench
+│   ├── gatelevel_tvla_sdf_run.log    TEST 7 — run log (PASS / SDF / $finish evidence)
+│   ├── tvla_trace_gatelevel_sdf.csv  TEST 7 — trace output
+│   ├── test3_place_route_separated.tcl      Constraint Repair v1 — place/route with the repaired XDC
+│   ├── test3_place_route_separated_out/     Constraint Repair v1 — v2 build checkpoints + reports
+│   ├── NOTE_experiment_lineage_separation.md   Note — keeps xc7a100t / xczu2 lineages explicitly separate
+│   ├── NOTE_sdf_simprims_requirement.md        Note — the simprims_ver dependency behind TEST 7's earlier blocker
+│   └── NOTE_tb_masked_and_gadget_scope.md      Note — scope/rename caveat on tb_masked_and_gadget.v
 ├── results/
 │   ├── m0_baseline/                  Synth/PnR checkpoints + distance-indicator output, all variants
 │   ├── m1_conflict_detection/        Diagnostic output from the switch-box detector
@@ -255,7 +311,7 @@ This project's contribution is narrower and more specific than "physical separat
     │                                  it succeeded or failed (the most detailed primary source)
     ├── SHARE_TAGGING_CONVENTION.md   Naming convention used to identify share domains
     ├── M3C_PLACEMENT_GEOMETRY.md     M3c methodology, step-by-step, and what it does/doesn't resolve
-    ├── M4_TVLA_SUMMARY.md            M4 pipeline and TVLA statistics (predates the TEST 1-7 suite;
+    ├── M4_TVLA_SUMMARY.md            M4 pipeline and TVLA statistics (predates the TEST 1-8 suite;
     │                                  its SDF-blocker note is superseded by TEST 7, see below)
     └── PROVENANCE_GAPS.md            Open and resolved provenance gaps found during the repository audit
 ```
@@ -350,7 +406,7 @@ python src/m4_tvla/tvla_analysis.py \
 Full provenance for every checkpoint and result file in `results/` is in [`results/INDEX.md`](results/INDEX.md).
 
 <details>
-<summary><b>7. Run the security test suite (TEST 1–7, xc7a100t)</b></summary>
+<summary><b>7. Run the security test suite (TEST 1–8, xc7a100t)</b></summary>
 
 ```bash
 # TEST 1/2 — exhaustive functional + share-reconstruction check
@@ -363,14 +419,21 @@ python src/m4_tvla/tvla_analysis.py --threshold 4.5
 # TEST 3b — Hamming-Distance TVLA proxy
 python security_tests/tvla_hd_analysis.py --threshold 4.5
 
+# TEST 4 — second-order/joint-share TVLA (both stimulus constructions)
+python security_tests/gen_tvla_stimulus_v2.py --out security_tests/stimulus_v2_fixed11.mem
+python security_tests/tvla_2nd_order_analysis.py --threshold 4.5
+
 # TEST 7 — SDF-annotated gate-level TVLA (requires the simprims_ver library)
 xvlog -L simprims_ver security_tests/tb_gatelevel_tvla_sdf.v \
     results/m4_tvla/masked_and_gadget_timesim.v
 xelab -L simprims_ver tb_gatelevel_tvla_sdf -sdfmax \
     /masked_and_gadget_timesim=results/m4_tvla/masked_and_gadget_timesim.sdf
 xsim tb_gatelevel_tvla_sdf -runall
+
+# TEST 8 — Constraint Repair v1 (baseline → original XDC → repaired XDC)
+vivado -mode batch -source security_tests/test3_place_route_separated.tcl
 ```
-TEST 4 (second-order) and TEST 5/6 (structural placement analysis) are read from the checkpoints and reports already in `results/`; see [Security test suite](#security-test-suite-test-1-7) above for what each does and doesn't establish.
+TEST 5/6 (structural placement analysis) are read from the checkpoints and reports already in `results/`; see [Security test suite](#security-test-suite-test-1-8) above for what each does and doesn't establish.
 </details>
 
 <br/>
@@ -378,15 +441,16 @@ TEST 4 (second-order) and TEST 5/6 (structural placement analysis) are read from
 ## Disclosed limitations
 
 - All M0–M3c findings are specific to one 2-share AND gadget on one Artix-7 part (plus a 4-net minimal rebuild on UltraScale+ for M3/M3b/M3c); generalization to larger designs (AES-scale) is not established.
-- No power/EM side-channel measurement was performed at any point on any device — all M0–M3c findings are placement/routing-geometry proxies, and the TEST 1–7 suite's are simulated functional/switching-activity proxies.
+- No power/EM side-channel measurement was performed at any point on any device — all M0–M3c findings are placement/routing-geometry proxies, and the TEST 1–8 suite's are simulated functional/switching-activity proxies.
 - The switch-box/tile conflict model (M1) is a structural, worst-case heuristic — it does not distinguish which specific wires within a shared tile actually couple, mirroring the same simplification Müller et al. explicitly defend (no GDSII access on commercial FPGAs).
 - The M2b pathfinder is a hand-built, unweighted-optimality search, not a validated general-purpose routing tool.
 - M3c's placement-geometry search is a hand-tuned, single-variable-at-a-time result for this one gadget on this one checkpoint lineage — not a demonstrated general or automated technique, and it does not touch the router's own cost function (M3/M3b's finding there stands unchanged).
 - M3/M3b's escalation figures (3 → 6 → 7 conflicts) are carried from the project's own run history; per-stage conflict CSVs were overwritten between runs and were not independently regenerated during this audit. See `docs/PROVENANCE_GAPS.md`.
-- **M4/TEST1-7 run on a separate checkpoint and RTL-naming lineage from M0–M3c** (Artix-7, conventional Vivado synthesis, v2 instance naming) — these results neither confirm nor refute the M1 switch-box coupling findings, and TEST 5/6 are two different devices/experiments that are never combined into one statistic.
+- **M4/TEST1-8 run on a separate checkpoint and RTL-naming lineage from M0–M3c** (Artix-7, conventional Vivado synthesis, v2 instance naming) — these results neither confirm nor refute the M1 switch-box coupling findings, and TEST 5/6 are two different devices/experiments that are never combined into one statistic.
 - None of the TVLA results (HW or HD; RTL, gate-level, or SDF-timing-annotated) establish that the physical implementation is leak-free — they establish only that these specific simulated proxies stayed under the 4.5 threshold. SDF timing simulation is the closest available proxy to real post-route behavior, but is still simulation, not silicon.
-- **Second-order/joint leakage security is not established.** The original fixed-population stimulus forces `a_sh1 = a_sh0` and `b_sh1 = b_sh0`, which confounds same-variable share-pair analysis; only non-tautological cross-variable pairs were meaningfully tested, and that result does not generalize to the untested same-variable pairs. A corrected stimulus construction is listed under Next steps.
-- **The active `xc7a100t` build used for TEST 1–7 has no share-separation placement constraint applied.** TEST 5 found both shares' AND-term LUTs co-packed in one site (`SLICE_X52Y100`) and one register pair at Manhattan distance 0 — "zero shared routing tiles" in the same build does not mean the shares are physically separated; it means a routing-tile diff cannot see intra-site sharing.
+- **Same-variable second-order/joint leakage security is not established, and is not simply pending a stimulus tweak.** Two independent fixed-vs-random TVLA stimulus constructions were tried; both structurally encode the masking invariant into the population label for same-variable share pairs (`a_sh0_r`/`a_sh1_r`, `b_sh0_r`/`b_sh1_r`), producing large pairwise \|t\| values that reflect the confound, not leakage. Changing the fixed secret value changes the confound's magnitude, not its root cause. Only non-tautological cross-variable pairs were meaningfully tested. A different experimental design — e.g. a properly constructed higher-order CPA using randomized rather than fixed-population traces — is required; see Next steps.
+- **The `xc7a100t` build characterized in Test 5 has no share-separation placement constraint applied.** That build found both shares' AND-term LUTs co-packed in one site (`SLICE_X52Y100`) and one register pair at Manhattan distance 0 — "zero shared routing tiles" in that same build does not mean the shares are physically separated; it means a routing-tile diff cannot see intra-site sharing. A separately constrained build (**Constraint Repair v1**) does close this gap, but is a different build from Test 5's, not a claim about Test 5's unconstrained build.
+- **Constraint Repair v1 is a hand-verified, single-instance repair of one naming-pattern gap in one XDC, on one build of one gadget.** It demonstrates that gap was avoidable, not that constraint-coverage gaps are generally detected or fixed automatically — the automated scanner → classifier → constraint-generator → reroute → rescan loop (M5) has not been built, and multi-gadget generalization has not been attempted.
 - No claim is made that this project implements a complete ML-KEM/ML-DSA system or any protocol beyond the individual masked gadgets studied.
 
 Full detail: `docs/M3C_PLACEMENT_GEOMETRY.md`, `docs/M4_TVLA_SUMMARY.md` (note: this file's SDF-blocker narrative predates and is superseded by TEST 7 above).
@@ -404,7 +468,7 @@ This repository was reconstructed from an audit of the original project archive.
 If you use or reference this work, please cite:
 
 ```bibtex
-@misc{krss-94,
+@misc{krss-94n,
   author       = {K Siva Srinivas},
   title        = {Physical Separation Verification and Its Limits for Masked FPGA Implementations},
   year         = {2026},
@@ -420,8 +484,8 @@ If you use or reference this work, please cite:
 
 ---
 
-**Krss** — B.E. Electronics and Communication Engineering, Sathyabama Institute of Science and Technology, Chennai
-Research guidance: Dr. G. Rajalakshmi
+**K Siva Srinivas** — B.E. Electronics and Communication Engineering, Sathyabama Institute of Science and Technology, Chennai
+
 
 Released under the [MIT License](LICENSE) · Use, adapt, and cite freely
 
