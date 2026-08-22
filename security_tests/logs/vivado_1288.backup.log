@@ -1,0 +1,248 @@
+INFO: [Common 17-3922] A valid Vivado Design Suite BASIC license has been detected. Your current license is active and will expire on 04-jul-2027.
+#-----------------------------------------------------------
+# Vivado v2026.1 (64-bit)
+# SW Build 6511674 on Tue Jun 16 11:02:23 MDT 2026
+# IP Build 6504888 on Tue Jun 09 09:05:25 MDT 2026
+# SharedData Build 6501428 on Mon Jun 08 17:34:18 MDT 2026
+# Start of session at: Sat Aug 22 11:14:14 2026
+# Process ID         : 1288
+# Current directory  : C:/vivado_work/milestone0/security_tests
+# Command line       : vivado.exe -mode batch -source test3_place_route_autorepair.tcl
+# Log file           : C:/vivado_work/milestone0/security_tests/vivado.log
+# Journal file       : C:/vivado_work/milestone0/security_tests\vivado.jou
+# Running On         : KRSSEFD5
+# Platform           : Windows 11
+# Operating System   : 26200
+# Processor Detail   : Apple Silicon
+# CPU Frequency      : 3072 MHz
+# CPU Physical cores : 4
+# CPU Logical cores  : 4
+# Host memory        : 10730 MB
+# Swap memory        : 0 MB
+# Total Virtual      : 10730 MB
+# Available Virtual  : 5608 MB
+#-----------------------------------------------------------
+source test3_place_route_autorepair.tcl
+# set PART        "xc7a100tcsg324-1"
+# set OUTDIR      "./test3_place_route_autorepair_out"
+# set SYNTH_CKPT  "../test2_synth_out/post_synth.dcp"
+# set XDC_FILE    "./share_separation_auto_repaired.xdc"
+# set PLACE_CKPT  "$OUTDIR/post_place.dcp"
+# set ROUTE_CKPT  "$OUTDIR/post_route.dcp"
+# file mkdir $OUTDIR
+# open_checkpoint $SYNTH_CKPT
+Command: open_checkpoint ../test2_synth_out/post_synth.dcp
+
+Starting open_checkpoint Task
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.072 . Memory (MB): peak = 424.109 ; gain = 1.234
+INFO: [Device 21-403] Loading part xc7a100tcsg324-1
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 902.004 ; gain = 0.000
+INFO: [Project 1-479] Netlist was created with Vivado 2026.1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 997.902 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+INFO: [Project 1-604] Checkpoint was created with Vivado v2026.1 (64-bit) build 6511674
+open_checkpoint: Time (s): cpu = 00:00:15 ; elapsed = 00:00:12 . Memory (MB): peak = 1006.082 ; gain = 590.043
+# create_clock -period 10.000 -name clk [get_ports clk]
+# set_input_delay  -clock clk 2.000 [get_ports {a_sh0 a_sh1 b_sh0 b_sh1 r}]
+# set_output_delay -clock clk 2.000 [get_ports {q_sh0 q_sh1}]
+# set_false_path -from [get_ports rst]
+# read_xdc $XDC_FILE
+Parsing XDC File [C:/vivado_work/milestone0/security_tests/share_separation_auto_repaired.xdc]
+WARNING: [Place 30-8517] Pblock ranges must include all sites of a tile. The ranges of pblock pblock_share0 have been updated to align to tile boundaries. [C:/vivado_work/milestone0/security_tests/share_separation_auto_repaired.xdc:33]
+CRITICAL WARNING: [Place 30-8520] Ranges extend outside of device: SLICE_X90Y99:SLICE_X60Y0 [C:/vivado_work/milestone0/security_tests/share_separation_auto_repaired.xdc:34]
+WARNING: [Vivado 12-25893] CONTAIN_ROUTING is mutually exclusive with IS_SOFT, IS_SOFT property for pblock pblock_share0 has been changed to false in order to set CONTAIN_ROUTING to true. [C:/vivado_work/milestone0/security_tests/share_separation_auto_repaired.xdc:41]
+WARNING: [Vivado 12-25893] CONTAIN_ROUTING is mutually exclusive with IS_SOFT, IS_SOFT property for pblock pblock_share1 has been changed to false in order to set CONTAIN_ROUTING to true. [C:/vivado_work/milestone0/security_tests/share_separation_auto_repaired.xdc:42]
+INFO: [Vivado 12-3520] Assignment of 'y_INST_0' to a pblock 'pblock_share0' means that all children of 'u_and_cross10' are in the pblock. Changing the pblock assignment to 'u_and_cross10'. [C:/vivado_work/milestone0/security_tests/share_separation_auto_repaired.xdc:53]
+INFO: [Vivado 12-3520] Assignment of 'y_INST_0' to a pblock 'pblock_share1' means that all children of 'u_and_cross01' are in the pblock. Changing the pblock assignment to 'u_and_cross01'. [C:/vivado_work/milestone0/security_tests/share_separation_auto_repaired.xdc:57]
+Finished Parsing XDC File [C:/vivado_work/milestone0/security_tests/share_separation_auto_repaired.xdc]
+# write_checkpoint -force "$OUTDIR/post_synth_constrained.dcp"
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-480] Writing timing data to binary archive.
+INFO: [Common 17-1381] The checkpoint 'C:/vivado_work/milestone0/security_tests/test3_place_route_autorepair_out/post_synth_constrained.dcp' has been generated.
+write_checkpoint: Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 1591.746 ; gain = 551.891
+# opt_design > "$OUTDIR/opt_design.log"
+Command: opt_design
+Attempting to get a license for feature 'Vivado_Implementation' and/or device 'xc7a100t'
+INFO: [Common 17-349] Got license for feature 'Vivado_Implementation' and/or device 'xc7a100t'
+Running DRC as a precondition to command opt_design
+INFO: [DRC 23-27] Running DRC with 2 threads
+WARNING: [DRC 23-814] Not all possible (connectivity based) DRCs may have been run because this design is seen as Out of Context.
+INFO: [Project 1-461] DRC finished with 0 Errors
+INFO: [Project 1-462] Please refer to the DRC report (report_drc) for more information.
+INFO: [Opt 31-1851] Number of loadless carry chains removed were: 0
+INFO: [Opt 31-1834] Total Chains To Be Transformed Were: 0 AND Number of Transformed insts Created are: 0
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Opt 31-49] Retargeted 0 cell(s).
+Retarget | Checksum: 1c6438ff8
+INFO: [Opt 31-389] Phase Retarget created 0 cells and removed 0 cells
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Constant propagation | Checksum: 1c6438ff8
+INFO: [Opt 31-389] Phase Constant propagation created 0 cells and removed 0 cells
+INFO: [Constraints 18-11670] Building netlist checker database with flags, 0x8
+Done building netlist checker database: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2104.156 ; gain = 0.000
+Sweep | Checksum: 1c6438ff8
+INFO: [Opt 31-389] Phase Sweep created 0 cells and removed 0 cells
+INFO: [Opt 31-1021] In phase Sweep, 18 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+BUFG optimization | Checksum: 1c6438ff8
+INFO: [Opt 31-662] Phase BUFG optimization created 0 cells of which 0 are BUFGs and removed 0 cells.
+INFO: [Opt 31-1064] SRL Remap converted 0 SRLs to 0 registers and converted 0 registers of register chains to 0 SRLs
+Shift Register Optimization | Checksum: 1c6438ff8
+INFO: [Opt 31-389] Phase Shift Register Optimization created 0 cells and removed 0 cells
+Post Processing Netlist | Checksum: 1c6438ff8
+INFO: [Opt 31-389] Phase Post Processing Netlist created 0 cells and removed 0 cells
+Opt_design Change Summary
+=========================
+
+
+-------------------------------------------------------------------------------------------------------------------------
+|  Phase                        |  #Cells created  |  #Cells Removed  |  #Constrained objects preventing optimizations  |
+-------------------------------------------------------------------------------------------------------------------------
+|  Retarget                     |               0  |               0  |                                              0  |
+|  Constant propagation         |               0  |               0  |                                              0  |
+|  Sweep                        |               0  |               0  |                                             18  |
+|  BUFG optimization            |               0  |               0  |                                              0  |
+|  Shift Register Optimization  |               0  |               0  |                                              0  |
+|  Post Processing Netlist      |               0  |               0  |                                              0  |
+-------------------------------------------------------------------------------------------------------------------------
+
+
+INFO: [Pwropt 34-132] Skipping clock gating for clocks with a period < 2.00 ns.
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2104.156 ; gain = 0.000
+INFO: [Common 17-83] Releasing license: Vivado_Implementation
+20 Infos, 1 Warnings, 0 Critical Warnings and 0 Errors encountered.
+opt_design completed successfully
+opt_design: Time (s): cpu = 00:00:06 ; elapsed = 00:00:08 . Memory (MB): peak = 2104.156 ; gain = 512.410
+# place_design > "$OUTDIR/place_design.log"
+Command: place_design
+Attempting to get a license for feature 'Vivado_Implementation' and/or device 'xc7a100t'
+INFO: [Common 17-349] Got license for feature 'Vivado_Implementation' and/or device 'xc7a100t'
+INFO: [Common 17-83] Releasing license: Vivado_Implementation
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+Running DRC as a precondition to command place_design
+INFO: [DRC 23-27] Running DRC with 2 threads
+WARNING: [DRC 23-814] Not all possible (connectivity based) DRCs may have been run because this design is seen as Out of Context.
+INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors
+INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
+INFO: [Place 30-611] Multithreading enabled for place_design using a maximum of 2 CPUs
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2104.156 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2104.156 ; gain = 0.000
+INFO: [Physopt 32-1035] Found 0 LUTNM shape to break, 4 LUT instances to create LUTNM shape
+INFO: [Physopt 32-1044] Break lutnm for timing: one critical 0, two critical 0, total 0, new lutff created 0
+INFO: [Physopt 32-1138] End 1 Pass. Optimized 2 nets or LUTs. Breaked 0 LUT, combined 2 existing LUTs and moved 0 existing LUT
+INFO: [Physopt 32-65] No nets found for high-fanout optimization.
+INFO: [Physopt 32-232] Optimized 0 net. Created 0 new instance.
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+INFO: [Physopt 32-670] No setup violation found.  DSP Register Optimization was not performed.
+INFO: [Physopt 32-670] No setup violation found.  Shift Register to Pipeline Optimization was not performed.
+INFO: [Physopt 32-670] No setup violation found.  Shift Register Optimization was not performed.
+INFO: [Physopt 32-670] No setup violation found.  BRAM Register Optimization was not performed.
+INFO: [Physopt 32-670] No setup violation found.  URAM Register Optimization was not performed.
+INFO: [Physopt 32-949] No candidate nets found for dynamic/static region interface net replication
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2104.156 ; gain = 0.000
+
+Summary of Physical Synthesis Optimizations
+============================================
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+|  Optimization                                     |  Added Cells  |  Removed Cells  |  Optimized Cells/Nets  |  Dont Touch  |  Iterations  |  Elapsed   |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+|  LUT Combining                                    |            0  |              2  |                     2  |           0  |           1  |  00:00:00  |
+|  Retime                                           |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Very High Fanout                                 |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  DSP Register                                     |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  Shift Register to Pipeline                       |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  Shift Register                                   |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  BRAM Register                                    |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  URAM Register                                    |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  Dynamic/Static Region Interface Net Replication  |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Total                                            |            0  |              2  |                     2  |           0  |           4  |  00:00:00  |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+Post Placement Optimization Initialization | Checksum: 1e5d9168f
+INFO: [Physopt 32-721] Multithreading enabled for phys_opt_design using a maximum of 2 CPUs
+INFO: [Physopt 32-619] Estimated Timing Summary | WNS=5.501 | TNS=0.000 |
+INFO: [Place 46-56] BUFG insertion identified 0 candidate nets. Inserted BUFG: 0, Replicated BUFG Driver: 0, Skipped due to Placement/Routing Conflicts: 0, Skipped due to Timing Degradation: 0, Skipped due to netlist editing failed: 0.
+INFO: [Place 30-746] Post Placement Timing Summary WNS=5.501. For the most accurate timing information please run report_timing.
+INFO: [Place 30-612] Post-Placement Estimated Congestion 
+ ____________________________________________________
+|           | Global Congestion | Short Congestion  |
+| Direction | Region Size       | Region Size       |
+|___________|___________________|___________________|
+|      North|                1x1|                1x1|
+|___________|___________________|___________________|
+|      South|                1x1|                1x1|
+|___________|___________________|___________________|
+|       East|                1x1|                1x1|
+|___________|___________________|___________________|
+|       West|                1x1|                1x1|
+|___________|___________________|___________________|
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2104.156 ; gain = 0.000
+26 Infos, 1 Warnings, 0 Critical Warnings and 0 Errors encountered.
+place_design completed successfully
+# write_checkpoint -force $PLACE_CKPT
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.003 . Memory (MB): peak = 2104.156 ; gain = 0.000
+Wrote PlaceDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 2104.156 ; gain = 0.000
+Wrote PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2104.156 ; gain = 0.000
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Wrote RouteStorage: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.040 . Memory (MB): peak = 2104.156 ; gain = 0.000
+Wrote PlaceStorage: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.005 . Memory (MB): peak = 2104.156 ; gain = 0.000
+Wrote Netlist Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2104.156 ; gain = 0.000
+Wrote Device Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.009 . Memory (MB): peak = 2104.156 ; gain = 0.000
+Write Physdb Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.088 . Memory (MB): peak = 2104.156 ; gain = 0.000
+INFO: [Common 17-1381] The checkpoint 'C:/vivado_work/milestone0/security_tests/test3_place_route_autorepair_out/post_place.dcp' has been generated.
+# route_design > "$OUTDIR/route_design.log"
+Command: route_design
+Attempting to get a license for feature 'Vivado_Implementation' and/or device 'xc7a100t'
+INFO: [Common 17-349] Got license for feature 'Vivado_Implementation' and/or device 'xc7a100t'
+INFO: [Route 35-254] Multithreading enabled for route_design using a maximum of 2 CPUs
+WARNING: [Constraints 18-8777] Unable to split tiles. All required files are not available.
+INFO: [Route 35-16] Router Completed Successfully
+INFO: [Common 17-83] Releasing license: Vivado_Implementation
+9 Infos, 8 Warnings, 0 Critical Warnings and 0 Errors encountered.
+route_design completed successfully
+route_design: Time (s): cpu = 00:00:34 ; elapsed = 00:00:31 . Memory (MB): peak = 2104.156 ; gain = 0.000
+# write_checkpoint -force $ROUTE_CKPT
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.002 . Memory (MB): peak = 2104.156 ; gain = 0.000
+Wrote PlaceDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2104.156 ; gain = 0.000
+Wrote PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 2104.156 ; gain = 0.000
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Wrote RouteStorage: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.041 . Memory (MB): peak = 2104.156 ; gain = 0.000
+Wrote PlaceStorage: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 2104.156 ; gain = 0.000
+Wrote Netlist Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2104.156 ; gain = 0.000
+Wrote Device Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.008 . Memory (MB): peak = 2104.156 ; gain = 0.000
+Write Physdb Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.078 . Memory (MB): peak = 2104.156 ; gain = 0.000
+INFO: [Common 17-1381] The checkpoint 'C:/vivado_work/milestone0/security_tests/test3_place_route_autorepair_out/post_route.dcp' has been generated.
+# report_utilization -hierarchical -file "$OUTDIR/utilization_post_route.rpt"
+# report_timing_summary -file "$OUTDIR/timing_summary_post_route.rpt"
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 2 CPUs
+WARNING: [Timing 38-242] The property HD.CLK_SRC of clock port "clk" is not set. In out-of-context mode, this prevents timing estimation for clock delay/skew
+Resolution: Set the HD.CLK_SRC property of the out-of-context port to the location of the clock buffer instance in the top-level design
+# report_route_status -file "$OUTDIR/route_status.rpt"
+# report_drc -file "$OUTDIR/post_route_drc.rpt"
+Command: report_drc -file ./test3_place_route_autorepair_out/post_route_drc.rpt
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'C:/AMDDesignTools/2026.1/Vivado/data/ip'.
+INFO: [DRC 23-27] Running DRC with 2 threads
+WARNING: [DRC 23-814] Not all possible (connectivity based) DRCs may have been run because this design is seen as Out of Context.
+INFO: [Vivado_Tcl 2-168] The results of DRC are in file C:/vivado_work/milestone0/security_tests/test3_place_route_autorepair_out/post_route_drc.rpt.
+report_drc completed successfully
+# puts "TEST auto-repair place/route complete. Outputs in $OUTDIR"
+TEST auto-repair place/route complete. Outputs in ./test3_place_route_autorepair_out
+INFO: [Common 17-206] Exiting Vivado at Sat Aug 22 11:15:29 2026...

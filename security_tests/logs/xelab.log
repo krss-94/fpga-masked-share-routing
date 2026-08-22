@@ -1,0 +1,18 @@
+Vivado Simulator v2026.1
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: C:/AMDDesignTools/2026.1/Vivado/bin/unwrapped/win64.o/xelab.exe -debug typical sec_work.tb_tvla_v2_nondegenerate -s tvla_v2_nondegenerate_snap 
+Multi-threading is on. Using 2 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module sec_work.LUT2_and_sh0
+Compiling module sec_work.LUT2_and_cross01
+Compiling module sec_work.LUT2_and_cross10
+Compiling module sec_work.LUT2_and_sh1
+Compiling module sec_work.masked_and_gadget
+Compiling module sec_work.tb_tvla_v2_nondegenerate
+Built simulation snapshot tvla_v2_nondegenerate_snap

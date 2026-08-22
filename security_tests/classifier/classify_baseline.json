@@ -1,0 +1,38 @@
+{
+  "checkpoint": "../test3_place_route_out/post_route.dcp",
+  "sh0_patterns": ["*_sh0*", "*cross10*"],
+  "sh1_patterns": ["*_sh1*", "*cross01*"],
+  "watch_patterns": ["*_sh0*", "*_sh1*", "*cross01*", "*cross10*"],
+  "cells": [
+    {"name": "a_sh0_r_reg", "site": "SLICE_X53Y100", "bel": "SLICEL.A5FF", "side": "sh0"},
+    {"name": "b_sh0_r_reg", "site": "SLICE_X52Y100", "bel": "SLICEL.BFF", "side": "sh0"},
+    {"name": "q_sh0_reg_reg", "site": "SLICE_X53Y100", "bel": "SLICEL.BFF", "side": "sh0"},
+    {"name": "t0_sh0_i_1", "site": "SLICE_X53Y100", "bel": "SLICEL.A6LUT", "side": "sh0"},
+    {"name": "t0_sh0_reg", "site": "SLICE_X53Y100", "bel": "SLICEL.AFF", "side": "sh0"},
+    {"name": "u_and_sh0", "site": "", "bel": "", "side": "sh0"},
+    {"name": "u_and_sh0/y_INST_0", "site": "SLICE_X52Y100", "bel": "SLICEL.B6LUT", "side": "sh0"},
+    {"name": "a_sh1_r_reg", "site": "SLICE_X52Y100", "bel": "SLICEL.A5FF", "side": "sh1"},
+    {"name": "b_sh1_r_reg", "site": "SLICE_X52Y100", "bel": "SLICEL.CFF", "side": "sh1"},
+    {"name": "q_sh1_reg_reg", "site": "SLICE_X52Y100", "bel": "SLICEL.DFF", "side": "sh1"},
+    {"name": "t0_sh1_i_1", "site": "SLICE_X52Y100", "bel": "SLICEL.A6LUT", "side": "sh1"},
+    {"name": "t0_sh1_reg", "site": "SLICE_X52Y100", "bel": "SLICEL.AFF", "side": "sh1"},
+    {"name": "u_and_sh1", "site": "", "bel": "", "side": "sh1"},
+    {"name": "u_and_sh1/y_INST_0", "site": "SLICE_X52Y100", "bel": "SLICEL.C5LUT", "side": "sh1"},
+    {"name": "u_and_cross01", "site": "", "bel": "", "side": "sh1"},
+    {"name": "u_and_cross01/y_INST_0", "site": "SLICE_X52Y100", "bel": "SLICEL.B5LUT", "side": "sh1"},
+    {"name": "u_and_cross10", "site": "", "bel": "", "side": "sh0"},
+    {"name": "u_and_cross10/y_INST_0", "site": "SLICE_X52Y100", "bel": "SLICEL.C6LUT", "side": "sh0"}
+  ],
+  "sites": [
+    {"site": "SLICE_X52Y100", "members": ["b_sh0_r_reg", "u_and_sh0/y_INST_0", "a_sh1_r_reg", "b_sh1_r_reg", "q_sh1_reg_reg", "t0_sh1_i_1", "t0_sh1_reg", "u_and_sh1/y_INST_0", "u_and_cross01/y_INST_0", "u_and_cross10/y_INST_0"], "classification": "MIXED_SITE_CONFLICT"},
+    {"site": "SLICE_X53Y100", "members": ["a_sh0_r_reg", "q_sh0_reg_reg", "t0_sh0_i_1", "t0_sh0_reg"], "classification": "OK_SAME_SIDE"}
+  ],
+  "summary": {
+    "total_watched_cells": 18,
+    "mixed_site_conflicts": 1,
+    "sites_with_unclassified_cell_present": 0,
+    "sites_unclassified_only": 0,
+    "unclassified_cell_count": 0,
+    "unclassified_cells": []
+  }
+}

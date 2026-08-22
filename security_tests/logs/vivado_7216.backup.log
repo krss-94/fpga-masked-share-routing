@@ -1,0 +1,189 @@
+INFO: [Common 17-3922] A valid Vivado Design Suite BASIC license has been detected. Your current license is active and will expire on 04-jul-2027.
+#-----------------------------------------------------------
+# Vivado v2026.1 (64-bit)
+# SW Build 6511674 on Tue Jun 16 11:02:23 MDT 2026
+# IP Build 6504888 on Tue Jun 09 09:05:25 MDT 2026
+# SharedData Build 6501428 on Mon Jun 08 17:34:18 MDT 2026
+# Start of session at: Sat Aug 22 10:52:53 2026
+# Process ID         : 7216
+# Current directory  : C:/vivado_work/milestone0/security_tests
+# Command line       : vivado.exe -mode batch -source detect_classify.tcl -tclargs ./test3_place_route_v2_out/post_route.dcp *_sh0* *cross10* *_sh1* *cross01* *_sh0* *_sh1* *cross01* *cross10* classify_v2.json
+# Log file           : C:/vivado_work/milestone0/security_tests/vivado.log
+# Journal file       : C:/vivado_work/milestone0/security_tests\vivado.jou
+# Running On         : KRSSEFD5
+# Platform           : Windows 11
+# Operating System   : 26200
+# Processor Detail   : Apple Silicon
+# CPU Frequency      : 3072 MHz
+# CPU Physical cores : 4
+# CPU Logical cores  : 4
+# Host memory        : 10730 MB
+# Swap memory        : 0 MB
+# Total Virtual      : 10730 MB
+# Available Virtual  : 5609 MB
+#-----------------------------------------------------------
+source detect_classify.tcl
+# proc quote_join {lst} {
+#     set parts {}
+#     foreach item $lst {
+#         lappend parts "\"$item\""
+#     }
+#     return [join $parts ", "]
+# }
+# proc classify_side {cellname sh0_patterns sh1_patterns} {
+#     foreach p $sh0_patterns {
+#         if {[string match $p $cellname]} { return "sh0" }
+#     }
+#     foreach p $sh1_patterns {
+#         if {[string match $p $cellname]} { return "sh1" }
+#     }
+#     return "unclassified"
+# }
+# if {[llength $argv] < 5} {
+#     puts "ERROR: usage: detect_classify.tcl <dcp> <sh0_patterns_csv> <sh1_patterns_csv> <watch_patterns_csv> <output_json>"
+#     exit 1
+# }
+# set dcp             [lindex $argv 0]
+# set sh0_patterns    [split [lindex $argv 1] ","]
+# set sh1_patterns    [split [lindex $argv 2] ","]
+# set watch_patterns  [split [lindex $argv 3] ","]
+# set out_json        [lindex $argv 4]
+# open_checkpoint $dcp
+Command: open_checkpoint ./test3_place_route_v2_out/post_route.dcp
+
+Starting open_checkpoint Task
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.070 . Memory (MB): peak = 426.668 ; gain = 3.723
+INFO: [Device 21-403] Loading part xc7a100tcsg324-1
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 904.359 ; gain = 0.000
+INFO: [Project 1-479] Netlist was created with Vivado 2026.1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+Read ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.006 . Memory (MB): peak = 998.422 ; gain = 0.000
+INFO: [Timing 38-478] Restoring timing data from binary archive.
+INFO: [Timing 38-479] Binary timing data restore complete.
+INFO: [Project 1-856] Restoring constraints from binary archive.
+INFO: [Project 1-853] Binary constraint restore complete.
+INFO: [Designutils 20-5722] Start Reading Physical Databases.
+Reading placement.
+Read Netlist Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1594.953 ; gain = 0.000
+Reading placer database...
+Read Device Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.006 . Memory (MB): peak = 1594.953 ; gain = 0.000
+Read PlaceDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1594.953 ; gain = 0.000
+Read placeStorage: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.002 . Memory (MB): peak = 1605.723 ; gain = 10.770
+Read PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1605.723 ; gain = 0.000
+Reading routing.
+Read RouteStorage: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.013 . Memory (MB): peak = 1605.723 ; gain = 0.000
+Read Physdb Files: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.050 . Memory (MB): peak = 1605.723 ; gain = 10.770
+Restored from archive | CPU: 0.000000 secs | Memory: 0.000000 MB |
+Finished XDEF File Restore: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.125 . Memory (MB): peak = 1605.723 ; gain = 19.238
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1605.723 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+INFO: [Project 1-604] Checkpoint was created with Vivado v2026.1 (64-bit) build 6511674
+open_checkpoint: Time (s): cpu = 00:00:25 ; elapsed = 00:00:23 . Memory (MB): peak = 1605.723 ; gain = 1192.664
+# set watched_cells {}
+# foreach pat $watch_patterns {
+#     set cells [get_cells -quiet -hierarchical -filter "NAME =~ ${pat}"]
+#     foreach c $cells {
+#         if {[lsearch -exact $watched_cells $c] < 0} {
+#             lappend watched_cells $c
+#         }
+#     }
+# }
+# array set site_of {}
+# array set side_of {}
+# array set bel_of {}
+# foreach c $watched_cells {
+#     set site_of($c) [get_property -quiet SITE $c]
+#     set bel_of($c)  [get_property -quiet BEL $c]
+#     set side_of($c) [classify_side $c $sh0_patterns $sh1_patterns]
+# }
+# array set site_sides {}
+# foreach c $watched_cells {
+#     set site $site_of($c)
+#     if {$site == ""} { continue }
+#     if {![info exists site_sides($site)]} { set site_sides($site) {} }
+#     lappend site_sides($site) $c
+# }
+# set fh [open $out_json w]
+# puts $fh "\{"
+# puts $fh "  \"checkpoint\": \"$dcp\","
+# puts $fh "  \"sh0_patterns\": \[[quote_join $sh0_patterns]\],"
+# puts $fh "  \"sh1_patterns\": \[[quote_join $sh1_patterns]\],"
+# puts $fh "  \"watch_patterns\": \[[quote_join $watch_patterns]\],"
+# puts $fh "  \"cells\": \["
+# set n [llength $watched_cells]
+# set i 0
+# foreach c $watched_cells {
+#     incr i
+#     set comma [expr {$i < $n ? "," : ""}]
+#     puts $fh "    \{\"name\": \"$c\", \"site\": \"$site_of($c)\", \"bel\": \"$bel_of($c)\", \"side\": \"$side_of($c)\"\}$comma"
+# }
+# puts $fh "  \],"
+# puts $fh "  \"sites\": \["
+# set site_names [array names site_sides]
+# set ns [llength $site_names]
+# set si 0
+# set mixed_count 0
+# set unclassified_present_count 0
+# set unclassified_only_count 0
+# foreach site $site_names {
+#     incr si
+#     set members $site_sides($site)
+#     set has_sh0 0
+#     set has_sh1 0
+#     set has_unclassified 0
+#     foreach m $members {
+#         set s $side_of($m)
+#         if {$s == "sh0"} { set has_sh0 1 }
+#         if {$s == "sh1"} { set has_sh1 1 }
+#         if {$s == "unclassified"} { set has_unclassified 1 }
+#     }
+#     if {$has_sh0 && $has_sh1} {
+#         set classification "MIXED_SITE_CONFLICT"
+#         incr mixed_count
+#     } elseif {$has_unclassified && ($has_sh0 || $has_sh1)} {
+#         set classification "UNCLASSIFIED_CELL_PRESENT"
+#         incr unclassified_present_count
+#     } elseif {$has_unclassified} {
+#         set classification "UNCLASSIFIED_ONLY"
+#         incr unclassified_only_count
+#     } elseif {[llength $members] > 1} {
+#         set classification "OK_SAME_SIDE"
+#     } else {
+#         set classification "OK_SINGLE_CELL"
+#     }
+#     set comma [expr {$si < $ns ? "," : ""}]
+#     puts $fh "    \{\"site\": \"$site\", \"members\": \[[quote_join $members]\], \"classification\": \"$classification\"\}$comma"
+# }
+# puts $fh "  \],"
+# set unclassified_cells {}
+# foreach c $watched_cells {
+#     if {$side_of($c) == "unclassified"} { lappend unclassified_cells $c }
+# }
+# puts $fh "  \"summary\": \{"
+# puts $fh "    \"total_watched_cells\": $n,"
+# puts $fh "    \"mixed_site_conflicts\": $mixed_count,"
+# puts $fh "    \"sites_with_unclassified_cell_present\": $unclassified_present_count,"
+# puts $fh "    \"sites_unclassified_only\": $unclassified_only_count,"
+# puts $fh "    \"unclassified_cell_count\": [llength $unclassified_cells],"
+# puts $fh "    \"unclassified_cells\": \[[quote_join $unclassified_cells]\]"
+# puts $fh "  \}"
+# puts $fh "\}"
+# close $fh
+# puts "=== Classification complete ==="
+=== Classification complete ===
+# puts "Watched cells: $n"
+Watched cells: 7
+# puts "MIXED_SITE_CONFLICT sites: $mixed_count"
+MIXED_SITE_CONFLICT sites: 0
+# puts "UNCLASSIFIED_CELL_PRESENT sites: $unclassified_present_count"
+UNCLASSIFIED_CELL_PRESENT sites: 0
+# puts "UNCLASSIFIED_ONLY sites: $unclassified_only_count"
+UNCLASSIFIED_ONLY sites: 1
+# puts "Unclassified cells total: [llength $unclassified_cells]"
+Unclassified cells total: 7
+# puts "Output written to: $out_json"
+Output written to: *cross01*
+INFO: [Common 17-206] Exiting Vivado at Sat Aug 22 10:53:19 2026...

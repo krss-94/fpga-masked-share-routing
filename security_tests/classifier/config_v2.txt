@@ -1,0 +1,5 @@
+DCP=./test3_place_route_v2_out/post_route.dcp
+SH0=*_sh0*|*cross10*
+SH1=*_sh1*|*cross01*
+WATCH=*_sh0*|*_sh1*|*cross01*|*cross10*
+OUT=classify_v2.json

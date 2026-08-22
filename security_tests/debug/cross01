@@ -1,0 +1,26 @@
+{
+  "checkpoint": "./test3_place_route_v2_out/post_route.dcp",
+  "sh0_patterns": ["*_sh0*"],
+  "sh1_patterns": ["*cross10*"],
+  "watch_patterns": ["*_sh1*"],
+  "cells": [
+    {"name": "a_sh1_r_reg", "site": "SLICE_X60Y99", "bel": "SLICEM.A5FF", "side": "unclassified"},
+    {"name": "b_sh1_r_reg", "site": "SLICE_X60Y99", "bel": "SLICEM.BFF", "side": "unclassified"},
+    {"name": "q_sh1_reg_reg", "site": "SLICE_X60Y99", "bel": "SLICEM.CFF", "side": "unclassified"},
+    {"name": "t0_sh1_i_1", "site": "SLICE_X60Y99", "bel": "SLICEM.A6LUT", "side": "unclassified"},
+    {"name": "t0_sh1_reg", "site": "SLICE_X60Y99", "bel": "SLICEM.AFF", "side": "unclassified"},
+    {"name": "u_and_sh1", "site": "", "bel": "", "side": "unclassified"},
+    {"name": "u_and_sh1/y_INST_0", "site": "SLICE_X60Y99", "bel": "SLICEM.B6LUT", "side": "unclassified"}
+  ],
+  "sites": [
+    {"site": "SLICE_X60Y99", "members": ["a_sh1_r_reg", "b_sh1_r_reg", "q_sh1_reg_reg", "t0_sh1_i_1", "t0_sh1_reg", "u_and_sh1/y_INST_0"], "classification": "UNCLASSIFIED_ONLY"}
+  ],
+  "summary": {
+    "total_watched_cells": 7,
+    "mixed_site_conflicts": 0,
+    "sites_with_unclassified_cell_present": 0,
+    "sites_unclassified_only": 1,
+    "unclassified_cell_count": 7,
+    "unclassified_cells": ["a_sh1_r_reg", "b_sh1_r_reg", "q_sh1_reg_reg", "t0_sh1_i_1", "t0_sh1_reg", "u_and_sh1", "u_and_sh1/y_INST_0"]
+  }
+}

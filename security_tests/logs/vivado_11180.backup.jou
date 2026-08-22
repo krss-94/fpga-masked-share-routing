@@ -1,0 +1,24 @@
+#-----------------------------------------------------------
+# Vivado v2026.1 (64-bit)
+# SW Build 6511674 on Tue Jun 16 11:02:23 MDT 2026
+# IP Build 6504888 on Tue Jun 09 09:05:25 MDT 2026
+# SharedData Build 6501428 on Mon Jun 08 17:34:18 MDT 2026
+# Start of session at: Sat Aug 22 10:55:52 2026
+# Process ID         : 11180
+# Current directory  : C:/vivado_work/milestone0/security_tests
+# Command line       : vivado.exe -mode batch -source detect_classify.tcl -tclargs config_baseline.txt
+# Log file           : C:/vivado_work/milestone0/security_tests/vivado.log
+# Journal file       : C:/vivado_work/milestone0/security_tests\vivado.jou
+# Running On         : KRSSEFD5
+# Platform           : Windows 11
+# Operating System   : 26200
+# Processor Detail   : Apple Silicon
+# CPU Frequency      : 3072 MHz
+# CPU Physical cores : 4
+# CPU Logical cores  : 4
+# Host memory        : 10730 MB
+# Swap memory        : 0 MB
+# Total Virtual      : 10730 MB
+# Available Virtual  : 5618 MB
+#-----------------------------------------------------------
+source detect_classify.tcl
