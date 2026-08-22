@@ -151,3 +151,87 @@ containment inside a single Vivado property. Separating the two resolves the
 apparent tension entirely, for all three gadgets, without giving up any
 separation guarantee and without fabricating a result.
 
+## Decision 14 — Automate the Constraint Repair v1 loop (M5); refuse MIXED_SITE_CONFLICT by design rather than guess
+
+**Context:** Constraint Repair v1 (Test 8 / `security_tests`) hand-diagnosed and
+hand-fixed one specific coverage gap: `share_separation.xdc`'s `*_sh0*`/`*_sh1*`
+name-pattern selector had no basis to place `u_and_cross01`/`u_and_cross10`, so
+those cells fell outside both pblocks. The fix worked, but it was a human reading
+a classification report and hand-writing a corrected XDC. The question this
+decision addresses: can that same detect -> diagnose -> fix -> reverify loop be
+run automatically, without silently guessing at cases the evidence doesn't
+support?
+
+**Problem, restated precisely:** the classifier (`detect_classify.tcl`, frozen
+and unmodified between all runs in this decision) buckets every occupied site
+into one of five categories. Two of those categories are candidates for
+automatic repair (`UNCLASSIFIED_CELL_PRESENT`, `UNCLASSIFIED_ONLY`); one is
+explicitly not (`MIXED_SITE_CONFLICT`).
+
+**Decision: only repair categories with sufficient evidence or explicit
+configured policy. Never guess.**
+
+- **`UNCLASSIFIED_CELL_PRESENT`** — an unclassified cell shares a site with
+  classified cells that are unanimously one side. Resolved by
+  `SITE_UNANIMOUS_INFERENCE`: assign to that unanimous side. This is inference
+  from direct placement evidence, not a policy choice.
+- **`UNCLASSIFIED_ONLY`** — no classified cells at that site at all, so there is
+  no site-level evidence to infer from. Resolved *only* via an explicit,
+  external `repair_policy.json` (`EXPLICIT_POLICY` / `SEPARATE_CROSS_TERMS`
+  name-pattern match). If no policy rule matches, the generator fails loudly
+  rather than falling back to a geometric guess (e.g. nearest pblock). This is
+  a configured decision, not a discovered fact — a different policy file
+  produces a different, equally "valid" assignment. Do not describe
+  `cross10 -> sh0` as independently inferred; it is a policy match.
+- **`MIXED_SITE_CONFLICT`** — refuse. Both shares' cells are already colocated
+  at one physical site; this is a placement collision, not a coverage gap, and
+  no automated pblock-membership addition can un-collide two cells already
+  placed together. Every affected cell is reported with
+  `action: NONE_UNSUPPORTED` and escalated for manual review. Zero assignments
+  is the *correct* output here, not a shortfall.
+
+**Validation, three unit tests plus one full end-to-end run — not a syntax
+check on the generated XDC:**
+
+- **Test A** (baseline checkpoint, no share-separation XDC, 1
+  `MIXED_SITE_CONFLICT` site, 10 cells): 0 assignments, all 10 cells
+  `NONE_UNSUPPORTED`. Confirms the refusal path fires and stays silent rather
+  than guessing.
+- **Test B** (v1 checkpoint, original hand-written XDC, the actual bug):
+  2 assignments — `u_and_cross01/y_INST_0` -> sh1 via
+  `SITE_UNANIMOUS_INFERENCE`, `u_and_cross10/y_INST_0` -> sh0 via
+  `EXPLICIT_POLICY`. Both traceable in the generation log with cell, site,
+  rule, and reason.
+- **Test C** (v2 checkpoint, manually repaired reference XDC, already clean):
+  0 assignments, explicit no-op XDC, empty generation log. Confirms the
+  generator doesn't manufacture spurious constraints when there's nothing to
+  fix.
+- **End-to-end acceptance:** Test B's generated repair
+  (`generated_repair_v1.xdc`) was concatenated *after the original broken*
+  `share_separation.xdc` — not the hand-repaired v2 — into
+  `share_separation_auto_repaired.xdc`, run from scratch through synthesis ->
+  `opt_design` -> `place_design` -> `route_design`, and the resulting
+  `post_route.dcp` was re-run through the *same frozen classifier* used for
+  Tests A/B/C. Result: `0 MIXED_SITE_CONFLICT / 0 UNCLASSIFIED_CELL_PRESENT /
+  0 UNCLASSIFIED_ONLY / 0 unclassified cells` — matching the manually repaired
+  v2 ground truth exactly.
+
+**Observed, disclosed anomaly:** applying the concatenated auto-repair XDC
+produced `CRITICAL WARNING: [Place 30-8520] Ranges extend outside of device:
+SLICE_X90Y99:SLICE_X60Y0` (`vivado_1288.backup.log`, line 56) — `pblock_share1`'s
+range, inherited unchanged from the original `share_separation.xdc`, extends
+outside `xc7a100tcsg324-1`'s real coordinate bounds. Vivado auto-clipped to
+tile boundaries (`[Place 30-8517]`, same log, line 55) and placement/routing
+completed successfully; final reclassification still shows 0/0/0/0. This is a
+pre-existing property of the original XDC's own pblock range choice, not
+something the generator introduced, and the automation does not "resolve" it —
+it's carried through unchanged. Recorded here so it isn't rediscovered as a new
+bug later.
+
+**Decision:** accept the automated loop as validated for this one design and
+this one conflict scenario. `MIXED_SITE_CONFLICT` remains permanently
+unsupported for automatic repair by design, not as a temporary gap — the
+correct behavior for a placement collision is human review, and the generator
+change that would be needed to "resolve" one (moving a cell) is out of scope
+for a pblock-membership generator by construction. Multi-gadget/multi-design
+generalization was not attempted and is not claimed.
