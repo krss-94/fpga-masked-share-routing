@@ -8,7 +8,7 @@
 ![Python](https://img.shields.io/badge/Python-3.13-0a0e17?style=for-the-badge&logo=python&logoColor=7cffcb&labelColor=0a0e17&color=0a0e17)
 ![Java](https://img.shields.io/badge/Java-24-0a0e17?style=for-the-badge&logo=openjdk&logoColor=ff9b3b&labelColor=0a0e17&color=0a0e17)
 ![Toolchain](https://img.shields.io/badge/Vivado%20%2F%20RapidWright-2026.1-0a0e17?style=for-the-badge&labelColor=0a0e17&color=ff4fd8)
-![Status](https://img.shields.io/badge/status-simulation--scope--complete-0a0e17?style=for-the-badge&labelColor=0a0e17&color=7cffcb)
+![Status](https://img.shields.io/badge/status-final--scope--complete-0a0e17?style=for-the-badge&labelColor=0a0e17&color=7cffcb)
 
 <br/>
 
@@ -29,7 +29,7 @@
 
 <br/>
 
-> **TL;DR** — Pblock containment fixes *where cells sit*, not *how nets route*. On a from-scratch 2-share AND gadget, three independently-built automated rerouting strategies — including a patched RapidWright router — all failed to eliminate cross-share switch-box conflicts, and tightening the router's own cost function made things *worse*, not better. A follow-on hand-tuned placement-geometry search (M3c) later closed every *avoidable* conflict, leaving **2 conflicts confirmed structurally unavoidable** on this device — by two independent methods. Separately, a full security test suite (exhaustive functional correctness, Hamming-Weight and Hamming-Distance TVLA proxies, and now-resolved SDF timing-annotated TVLA) found no detectable leakage in any tested simulated proxy — but **no physical power/EM measurement was ever performed**, a structural placement analysis on the active xc7a100t build found both shares' logic co-located in the same site under the current unconstrained placement, and the project's broader second-order/joint leakage security remains **not established** (the fixed-vs-random TVLA construction itself is structurally confounded for same-variable share pairs, not merely awaiting a stimulus tweak). A follow-on **Constraint Repair v1** experiment found the residual xc7a100t co-location was an avoidable XDC coverage gap rather than a structural one, and closed it with no additional LUT count and no further timing cost beyond the 0.062 ns WNS reduction separation already paid — a single-instance result, not a demonstrated general fix.
+> **TL;DR** — Pblock containment fixes *where cells sit*, not *how nets route*. On a from-scratch 2-share AND gadget, three independently-built automated rerouting strategies — including a patched RapidWright router — all failed to eliminate cross-share switch-box conflicts, and tightening the router's own cost function made things *worse*, not better. A follow-on hand-tuned placement-geometry search (M3c) later closed every *avoidable* conflict, leaving **2 conflicts confirmed structurally unavoidable** on this device — by two independent methods. Separately, a full security test suite (exhaustive functional correctness, Hamming-Weight and Hamming-Distance TVLA proxies, and now-resolved SDF timing-annotated TVLA) found no detectable leakage in any tested simulated proxy — but **no physical power/EM measurement was ever performed**, a structural placement analysis on the active xc7a100t build found both shares' logic co-located in the same site under the current unconstrained placement, and the project's broader second-order/joint leakage security remains **not established** (the fixed-vs-random TVLA construction itself is structurally confounded for same-variable share pairs, not merely awaiting a stimulus tweak). A follow-on **Constraint Repair v1** experiment found the residual xc7a100t co-location was an avoidable XDC coverage gap rather than a structural one, and closed it with no additional LUT count and no further timing cost beyond the 0.062 ns WNS reduction separation already paid — a single-instance result, not a demonstrated general fix. That single-instance repair was then automated: **M5**, a detect → classify → generate-repair → apply → re-implement → re-verify loop with a frozen classifier, was validated end-to-end on this same design and conflict scenario, ending at **0/0/0/0** after full re-implementation — still validated on one design and one conflict scenario only, not shown to generalize.
 
 <br/>
 
@@ -147,13 +147,88 @@ A follow-on experiment on the same `xc7a100t` lineage as Test 5 investigated whe
 
 **Result:** the `cross10` orphan identified in v1 was an **avoidable constraint-coverage gap, not a structural conflict** — expanding the XDC's cell-selection pattern to explicitly match `*cross01*`/`*cross10*` closed it fully, at zero additional LUT cost (10 LUTs in all three builds) and no timing cost beyond what separation already paid in v1 (a real 0.062 ns WNS reduction from baseline, present in both v1 and v2, with 0 failing endpoints in all three builds). Fully routed, 0 routing errors, 1 unrelated DRC warning.
 
-This is a completed, hand-verified, **single-instance** repair: it demonstrates that at least one residual cross-share conflict on this build was avoidable and that the constraint-selection mechanism itself can be fixed — it does not demonstrate general or automated mitigation. Generalizing this hand-run repair into an automated scanner → classifier → constraint-generator → reroute → rescan loop (**M5**) is scoped as future work and has not been started. The stronger research contribution of this project remains the combination of switch-box-level conflict detection, the failed automated rerouting attempts, the root-caused router limitations, the M3c placement-geometry search, the identified structurally-unavoidable conflicts, and the separate security/structural evaluation above — Constraint Repair v1 is an additional, concrete finding within that, not a reframing of it.
+This is a completed, hand-verified, **single-instance** repair: it demonstrates that at least one residual cross-share conflict on this build was avoidable and that the constraint-selection mechanism itself can be fixed. Generalizing this hand-run repair into an automated detect → classify → generate-repair → apply → re-implement → re-verify loop is exactly what **M5** (below) does — validated end-to-end on this same design and conflict scenario. The stronger research contribution of this project remains the combination of switch-box-level conflict detection, the failed automated rerouting attempts, the root-caused router limitations, the M3c placement-geometry search, the identified structurally-unavoidable conflicts, and the separate security/structural evaluation above — Constraint Repair v1 and M5 are additional, concrete findings within that, not a reframing of it.
+
+### M5 — Automated repair loop (closed loop, validated)
+
+Constraint Repair v1 (above) was a hand-run, single-instance fix. M5 automates the same detect → classify → generate-repair → apply → re-implement → re-verify loop with a **frozen classifier** and a configuration-driven repair generator, and validates it end-to-end by re-running the generated repair through synthesis, place, and route — not merely by checking that the generated XDC is syntactically valid.
+
+```
+INPUT CHECKPOINT
+      ↓
+DETECT + CLASSIFY        (detect_classify.tcl, frozen)
+      ↓
+CLASSIFICATION JSON
+      ↓
+REPAIR GENERATOR          (generate_constraints.py + repair_policy.json)
+      ↓
+GENERATED XDC
+      ↓
+IMPLEMENTATION            (constrain → opt_design → place_design → route_design)
+      ↓
+NEW CHECKPOINT
+      ↓
+SAME FROZEN CLASSIFIER
+      ↓
+0 MIXED_SITE_CONFLICT / 0 UNCLASSIFIED_CELL_PRESENT / 0 UNCLASSIFIED_ONLY / 0 unclassified cells
+```
+
+**Classifier.** `detect_classify.tcl` reads a checkpoint, watches cells matching configured name patterns, records each watched cell's `SITE`/`BEL`, and classifies every occupied site into one of five categories: `MIXED_SITE_CONFLICT` (both share-0- and share-1-tagged cells in one site), `UNCLASSIFIED_CELL_PRESENT` (a tagged cell shares a site with an untagged one), `UNCLASSIFIED_ONLY` (only untagged cells), `OK_SAME_SIDE`, `OK_SINGLE_CELL`. Output is a classification JSON with per-cell site/BEL/side data and summary counts. The same classifier binary/script is used before *and* after repair — it is not re-tuned between runs.
+
+**Generator.** `generate_constraints.py` reads a classifier JSON and a `repair_policy.json`, and emits `add_cells_to_pblock` constraints for cells it can resolve, plus a JSON generation log recording, for every assignment, the cell, its site, the rule that fired, and the reasoning. Three resolution paths exist:
+- **`SITE_UNANIMOUS_INFERENCE`** — an unclassified cell is the lone stray at a site otherwise unanimously one side; assigned to that side, no policy needed.
+- **`EXPLICIT_POLICY`** — an `UNCLASSIFIED_ONLY` cell with no site-level evidence is resolved by name-pattern match against `repair_policy.json`'s `SEPARATE_CROSS_TERMS` groups.
+- **`MIXED_SITE_CONFLICT` sites are explicitly not resolved.** The generator reports every affected cell with `action: NONE_UNSUPPORTED` and a reason ("placement collision, not a coverage gap — requires manual review"), and generates zero assignments. This is a designed refusal, not a gap in the generator.
+
+**Validated unit tests:**
+
+<div align="center">
+
+| Test | Input | Result |
+|:---|:---|:---|
+| **A** | Baseline checkpoint, no share-separation XDC — 1 `MIXED_SITE_CONFLICT` site (`SLICE_X52Y100`, 10 cells) | **0 assignments.** Generator refuses; all 10 affected cells explicitly reported `NONE_UNSUPPORTED` for manual review. No silent guessing. |
+| **B** | v1 checkpoint, original hand-written `share_separation.xdc` — 1 `UNCLASSIFIED_CELL_PRESENT` site, 1 `UNCLASSIFIED_ONLY` site | **2 assignments**, both traceable in the generation log: `u_and_cross01/y_INST_0` → `sh1` via `SITE_UNANIMOUS_INFERENCE`; `u_and_cross10/y_INST_0` → `sh0` via `EXPLICIT_POLICY` / `SEPARATE_CROSS_TERMS`. |
+| **C** | v2 checkpoint, manually repaired reference `share_separation_v2.xdc` — already clean | **0 assignments**, explicit no-op XDC, empty generation log. |
+
+</div>
+
+**End-to-end acceptance.** The generated repair from Test B (`generated_repair_v1.xdc`) was concatenated **after the original broken `share_separation.xdc`** (not the hand-repaired v2) into `share_separation_auto_repaired.xdc`, applied from scratch through synthesis → `opt_design` → `place_design` → `route_design`, and the resulting `post_route.dcp` was re-run through the same frozen classifier.
+
+**Final result:**
+
+<div align="center">
+
+| Stage | MIXED_SITE_CONFLICT | UNCLASSIFIED_CELL_PRESENT | UNCLASSIFIED_ONLY | Unclassified cells |
+|:---|:---:|:---:|:---:|:---:|
+| Baseline (no XDC) | **1** | 0 | 0 | 0 |
+| v1 (original hand-written XDC, broken) | 0 | **1** | **1** | **4** |
+| v2 (manually repaired reference) | 0 | 0 | 0 | 0 |
+| **Auto-repaired** (generated XDC + full re-implementation) | **0** | **0** | **0** | **0** |
+
+</div>
+
+Why v1 shows **4** unclassified cells for only **2** logical cross-share terms: the watch patterns match hierarchically, so each cross-term instance is counted at two hierarchy levels — once as the non-leaf wrapper instance (`u_and_cross01`, `u_and_cross10` — no `SITE`, hierarchy-only) and once as its leaf LUT cell (`u_and_cross01/y_INST_0`, `u_and_cross10/y_INST_0` — the actual placed BEL). 2 cross terms × 2 matched hierarchy levels each = 4 entries in `unclassified_cells`.
+
+**Comparison with manual repair.** The generated repair is **functionally equivalent** to the manually written `share_separation_v2.xdc` — both eliminate the same coverage gap, confirmed by re-implementation and re-classification — but is **not syntactically identical**: the generator emits exact-instance `NAME =~` filters (e.g. matching `u_and_cross10/y_INST_0` specifically) rather than the broader glob patterns (`*cross10*`) the manual v2 XDC used. This was an intentional generator design choice, to reduce the chance of an exact-instance constraint accidentally matching an unrelated cell in the future.
+
+**Important nuance on the `cross10 → sh0` assignment:** this is **not independently derived from placement geometry.** `u_and_cross10/y_INST_0` at `SLICE_X59Y99` had no site-level evidence to lean on (it was alone at that site). It was resolved purely through the configured `EXPLICIT_POLICY` / `SEPARATE_CROSS_TERMS` policy in `repair_policy.json`, which maps the `*cross10*` name pattern to `sh0` by configuration. A different policy file produces a different, equally "valid" assignment — this is a **configured policy decision**, not a discovered fact about the design.
+
+**Observed anomaly, disclosed rather than hidden:** applying the concatenated auto-repair XDC produced a Vivado `CRITICAL WARNING` (`Place 30-8520`) that `pblock_share1`'s range (`SLICE_X60Y0:SLICE_X90Y99`, inherited unchanged from the original `share_separation.xdc`) extends outside `xc7a100tcsg324-1`'s real coordinate bounds; Vivado auto-clipped the range to tile boundaries and placement/routing completed successfully, and the final reclassification still shows 0/0/0/0. This is a pre-existing property of the original XDC's pblock range choice, not something the generator introduced, and is not "resolved" by the automation — just carried through it.
+
+### Known limitations of the repair generator
+
+1. Only three classification categories currently have generation paths (`SITE_UNANIMOUS_INFERENCE`, `EXPLICIT_POLICY`, and the explicit non-repair of `MIXED_SITE_CONFLICT`).
+2. `MIXED_SITE_CONFLICT` is intentionally unsupported for automatic repair and always escalates to manual review — a design choice, not a missing feature.
+3. `EXPLICIT_POLICY` currently supports the `SEPARATE_CROSS_TERMS` policy type only.
+4. Validation has been performed on **one design and one specific conflict scenario** — this 2-share AND gadget's cross-share term coverage gap on `xc7a100t`.
+5. Generalization to arbitrary designs and arbitrary conflict shapes has **not** been demonstrated.
+6. The `cross10 → sh0` policy match is configuration-driven, not an independent validation of correctness — a different `repair_policy.json` would produce a different, equally "valid" assignment.
 
 ### Project status
 
 - Physical conflict detection (M1, xczu2 switch-box scan): **COMPLETE**.
 - Constraint Repair v1 (xc7a100t cross-term XDC coverage repair): **COMPLETE**.
-- M5 — automated scanner → classifier → constraint-generator → reroute → rescan loop: **NOT STARTED**.
+- M5 — automated detect → classify → generate-repair → apply → re-implement → re-verify loop: **COMPLETE**, validated end-to-end on one design / one conflict scenario (0/0/0/0 final result, confirmed by the same frozen classifier after full re-implementation). Generalization to other designs or conflict shapes not demonstrated.
 - Multi-gadget / multi-design generalization: **NOT STARTED**.
 
 ### Current security status
@@ -175,7 +250,7 @@ This is a completed, hand-verified, **single-instance** repair: it demonstrates 
 - Physical power/EM side-channel security.
 - Same-variable second-order/joint leakage evaluation: **NOT ESTABLISHED / methodology requires redesign** — two independent fixed-population TVLA stimulus constructions were tried, and both are structurally confounded for same-variable share pairs (the masking invariant itself gets encoded in the population label). This is not a pending parameter tweak; it requires a different experimental design, such as a properly constructed higher-order CPA using randomized rather than fixed-population traces.
 - Strong share separation in the *unconstrained* `xc7a100t` build characterized by Test 5 — that specific build has no share-separation constraint applied. (A separately constrained build, Constraint Repair v1, does achieve zero cross-share site/routing-tile mixing for the examined pairs, but that is a single-instance, hand-verified result — not a generalized or automated guarantee, and not a claim about Test 5's build.)
-- General or automated detection/repair of constraint-coverage gaps — Constraint Repair v1 fixed one identified gap by hand; the scanner → classifier → constraint-generator → reroute → rescan loop (M5) has not been built.
+- General or automated conflict repair across arbitrary designs — M5's loop is built and validated end-to-end (detect → classify → generate → implement → re-verify, 0/0/0/0), but only on this one design and this one conflict scenario; multi-gadget/multi-design generalization has not been attempted. `MIXED_SITE_CONFLICT` sites are explicitly excluded from automatic repair by design and always escalate to manual review.
 - Physical silicon behavior of any kind.
 
 None of the above should be read as "secure," "leak-free," or "side-channel resistant" — those terms are deliberately not used anywhere in this repository. Every result is a specific, scoped statement about a specific simulated model or structural artifact.
@@ -189,10 +264,11 @@ None of the above should be read as "secure," "leak-free," or "side-channel resi
 - Constraint Repair v1 — cross-term XDC coverage repair.
 - SDF timing-annotated gate-level TVLA (Test 7).
 - Second-order TVLA methodology investigation (Test 4).
+- M5 — automated detect → classify → generate-repair → apply → re-implement → re-verify loop, validated end-to-end on this design/conflict scenario (0/0/0/0 final result).
 
 **Remaining**
-1. Automated M5 scanner → classifier → XDC-generator → reroute → rescan loop.
-2. Multi-gadget / generalization study beyond this single 2-share AND gadget.
+1. Multi-gadget / multi-design generalization study of the M5 loop beyond this single 2-share AND gadget and this single conflict scenario.
+2. Additional generator resolution paths for classification categories beyond `SITE_UNANIMOUS_INFERENCE` and `EXPLICIT_POLICY`, and additional `EXPLICIT_POLICY` policy types beyond `SEPARATE_CROSS_TERMS`.
 3. A genuine higher-order (e.g. second-order CPA) evaluation methodology that doesn't depend on a fixed-population TVLA construction.
 4. Physical power/EM measurement — no result in this repository substitutes for it.
 5. xczu2 M1 → M3c gate-level comparison, if still applicable to the current checkpoint lineage.
@@ -215,6 +291,7 @@ flowchart LR
     I -.->|HW 1.24-1.28, HD 2.21-2.27, below 4.5| J[TEST7<br/>SDF-annotated TVLA: resolved]
     I -.->|unconstrained placement| K[TEST5<br/>xc7a100t co-location, structural]
     K -.->|coverage gap found, then repaired| L[TEST8<br/>Constraint Repair v1: closed]
+    L -.->|automated, generalized to a loop| M[M5<br/>Detect→classify→repair→reverify: 0/0/0/0]
 
     style A fill:#0a0e17,stroke:#00e5ff,color:#eafcff
     style B fill:#0a0e17,stroke:#00e5ff,color:#eafcff
@@ -228,6 +305,7 @@ flowchart LR
     style J fill:#0a1f14,stroke:#7bffb0,color:#daffe9
     style K fill:#241a05,stroke:#ffb648,color:#ffe9c2
     style L fill:#0a1f14,stroke:#7bffb0,color:#daffe9
+    style M fill:#0a1f14,stroke:#7bffb0,color:#daffe9
 ```
 
 <br/>
@@ -292,6 +370,19 @@ This project's contribution is narrower and more specific than "physical separat
 │   ├── tvla_trace_gatelevel_sdf.csv  TEST 7 — trace output
 │   ├── test3_place_route_separated.tcl      Constraint Repair v1 — place/route with the repaired XDC
 │   ├── test3_place_route_separated_out/     Constraint Repair v1 — v2 build checkpoints + reports
+│   ├── detect_classify.tcl           M5 — frozen classifier (config-file driven, used before/after repair)
+│   ├── config_baseline.txt, config_v1.txt, config_v2.txt, config_autorepair.txt
+│   │                                  M5 — classifier run configs for each checkpoint
+│   ├── classify_baseline.json, classify_v1.json, classify_v2.json, classify_autorepair.json
+│   │                                  M5 — classifier output for baseline / broken v1 / clean v2 / auto-repaired
+│   ├── repair_policy.json            M5 — EXPLICIT_POLICY config (SEPARATE_CROSS_TERMS: cross01→sh1, cross10→sh0)
+│   ├── generate_constraints.py       M5 — repair generator (SITE_UNANIMOUS_INFERENCE + EXPLICIT_POLICY)
+│   ├── generated_repair_v1.xdc, generated_repair_v1_log.json        M5 Test B — 2 assignments, traceable
+│   ├── generated_repair_v2_noop.xdc, generated_repair_v2_noop_log.json   M5 Test C — 0 assignments, no-op
+│   ├── generated_repair_baseline.xdc, generated_repair_baseline_log.json M5 Test A — 0 assignments, refused
+│   ├── share_separation_auto_repaired.xdc   M5 — original XDC + generated repair, concatenated
+│   ├── test3_place_route_autorepair.tcl     M5 — full re-implementation of the auto-repaired build
+│   ├── test3_place_route_autorepair_out/    M5 — auto-repaired build checkpoints + reports
 │   ├── NOTE_experiment_lineage_separation.md   Note — keeps xc7a100t / xczu2 lineages explicitly separate
 │   ├── NOTE_sdf_simprims_requirement.md        Note — the simprims_ver dependency behind TEST 7's earlier blocker
 │   └── NOTE_tb_masked_and_gadget_scope.md      Note — scope/rename caveat on tb_masked_and_gadget.v
@@ -436,6 +527,41 @@ vivado -mode batch -source security_tests/test3_place_route_separated.tcl
 TEST 5/6 (structural placement analysis) are read from the checkpoints and reports already in `results/`; see [Security test suite](#security-test-suite-test-1-8) above for what each does and doesn't establish.
 </details>
 
+<details>
+<summary><b>8. Run the M5 closed loop (detect → classify → generate → repair → re-implement → re-verify)</b></summary>
+
+```bash
+# Classify each checkpoint with the frozen classifier (config-file driven)
+vivado -mode batch -source security_tests/detect_classify.tcl -tclargs security_tests/config_baseline.txt
+vivado -mode batch -source security_tests/detect_classify.tcl -tclargs security_tests/config_v1.txt
+vivado -mode batch -source security_tests/detect_classify.tcl -tclargs security_tests/config_v2.txt
+
+# Generate a repair XDC from each classification (Tests A/B/C)
+py security_tests/generate_constraints.py security_tests/classify_baseline.json \
+    security_tests/repair_policy.json security_tests/generated_repair_baseline.xdc \
+    security_tests/generated_repair_baseline_log.json          # Test A: 0 assignments, refused
+
+py security_tests/generate_constraints.py security_tests/classify_v1.json \
+    security_tests/repair_policy.json security_tests/generated_repair_v1.xdc \
+    security_tests/generated_repair_v1_log.json                # Test B: 2 assignments
+
+py security_tests/generate_constraints.py security_tests/classify_v2.json \
+    security_tests/repair_policy.json security_tests/generated_repair_v2_noop.xdc \
+    security_tests/generated_repair_v2_noop_log.json            # Test C: 0 assignments, no-op
+
+# Apply the generated repair (Test B) to the original broken XDC, and re-implement from scratch
+cat constraints/share_separation.xdc security_tests/generated_repair_v1.xdc \
+    > security_tests/share_separation_auto_repaired.xdc
+vivado -mode batch -source security_tests/test3_place_route_autorepair.tcl
+
+# Re-classify the newly implemented checkpoint with the SAME frozen classifier
+vivado -mode batch -source security_tests/detect_classify.tcl -tclargs security_tests/config_autorepair.txt
+# Expected: 0 MIXED_SITE_CONFLICT, 0 UNCLASSIFIED_CELL_PRESENT, 0 UNCLASSIFIED_ONLY, 0 unclassified cells
+```
+
+Note: `repair_policy.json` must be plain UTF-8/ASCII with no BOM — a file saved with a byte-order mark fails Python's `json.load` with a `line 1 column 1` parse error before the generator ever runs.
+</details>
+
 <br/>
 
 ## Disclosed limitations
@@ -450,7 +576,7 @@ TEST 5/6 (structural placement analysis) are read from the checkpoints and repor
 - None of the TVLA results (HW or HD; RTL, gate-level, or SDF-timing-annotated) establish that the physical implementation is leak-free — they establish only that these specific simulated proxies stayed under the 4.5 threshold. SDF timing simulation is the closest available proxy to real post-route behavior, but is still simulation, not silicon.
 - **Same-variable second-order/joint leakage security is not established, and is not simply pending a stimulus tweak.** Two independent fixed-vs-random TVLA stimulus constructions were tried; both structurally encode the masking invariant into the population label for same-variable share pairs (`a_sh0_r`/`a_sh1_r`, `b_sh0_r`/`b_sh1_r`), producing large pairwise \|t\| values that reflect the confound, not leakage. Changing the fixed secret value changes the confound's magnitude, not its root cause. Only non-tautological cross-variable pairs were meaningfully tested. A different experimental design — e.g. a properly constructed higher-order CPA using randomized rather than fixed-population traces — is required; see Next steps.
 - **The `xc7a100t` build characterized in Test 5 has no share-separation placement constraint applied.** That build found both shares' AND-term LUTs co-packed in one site (`SLICE_X52Y100`) and one register pair at Manhattan distance 0 — "zero shared routing tiles" in that same build does not mean the shares are physically separated; it means a routing-tile diff cannot see intra-site sharing. A separately constrained build (**Constraint Repair v1**) does close this gap, but is a different build from Test 5's, not a claim about Test 5's unconstrained build.
-- **Constraint Repair v1 is a hand-verified, single-instance repair of one naming-pattern gap in one XDC, on one build of one gadget.** It demonstrates that gap was avoidable, not that constraint-coverage gaps are generally detected or fixed automatically — the automated scanner → classifier → constraint-generator → reroute → rescan loop (M5) has not been built, and multi-gadget generalization has not been attempted.
+- **Constraint Repair v1 was hand-run; M5 automates the same loop (detect → classify → generate-repair → apply → re-implement → re-verify) and validates it end-to-end, but on one design and one conflict scenario only.** `MIXED_SITE_CONFLICT` sites are explicitly excluded from automatic repair by design (they always escalate to manual review, generating zero assignments) — this is a designed refusal, not a partial implementation. The generator currently supports only `SITE_UNANIMOUS_INFERENCE` and `EXPLICIT_POLICY` (with a single policy type, `SEPARATE_CROSS_TERMS`) as resolution paths; other classification categories and other conflict shapes have no generation path yet. Multi-gadget/multi-design generalization has not been attempted. The `cross10 → sh0` assignment specifically is a configured policy decision (`repair_policy.json`), not an independently derived geometric fact — a different policy file yields a different assignment.
 - No claim is made that this project implements a complete ML-KEM/ML-DSA system or any protocol beyond the individual masked gadgets studied.
 
 Full detail: `docs/M3C_PLACEMENT_GEOMETRY.md`, `docs/M4_TVLA_SUMMARY.md` (note: this file's SDF-blocker narrative predates and is superseded by TEST 7 above).
@@ -468,7 +594,7 @@ This repository was reconstructed from an audit of the original project archive.
 If you use or reference this work, please cite:
 
 ```bibtex
-@misc{krss-94n,
+@misc{krss-94ps,
   author       = {K Siva Srinivas},
   title        = {Physical Separation Verification and Its Limits for Masked FPGA Implementations},
   year         = {2026},
@@ -484,8 +610,7 @@ If you use or reference this work, please cite:
 
 ---
 
-**K Siva Srinivas** — B.E. Electronics and Communication Engineering, Sathyabama Institute of Science and Technology, Chennai
-
+**Krss** — B.E. Electronics and Communication Engineering, Sathyabama Institute of Science and Technology, Chennai
 
 Released under the [MIT License](LICENSE) · Use, adapt, and cite freely
 
