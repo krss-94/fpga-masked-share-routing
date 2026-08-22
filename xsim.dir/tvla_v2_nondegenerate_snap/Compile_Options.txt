@@ -1,0 +1,1 @@
+-debug "typical" "sec_work.tb_tvla_v2_nondegenerate" -s "tvla_v2_nondegenerate_snap" 

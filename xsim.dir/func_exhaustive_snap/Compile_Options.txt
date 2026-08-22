@@ -1,0 +1,1 @@
+-debug "typical" "sec_work.tb_functional_exhaustive" -s "func_exhaustive_snap" 
