@@ -17,13 +17,22 @@ patched over or fabricated.
   the v3 testbench's own header comment documents the PRNG-artifact diagnosis and fix.
   See `docs/M4_TVLA_SUMMARY.md`.
 
-## Open / unresolved
+## Resolved since M5 (this pass)
 
-- **`docs/PROJECT_SUMMARY.md` and `results/INDEX.md`** — the README references both
-  as authoritative sources for full methodology and per-file provenance. **Neither
-  exists anywhere in the uploaded archive.** Not fabricated here. If they exist
-  outside this upload, add them; otherwise the README's pointers to them are
-  currently dangling.
+- **`results/INDEX.md`** — created. Documents every M5 artifact
+  (`classify_*.json`, `config_*.txt`, `repair_policy.json`,
+  `generate_constraints.py`, `generated_repair_*`,
+  `share_separation_auto_repaired.xdc`, `test3_place_route_autorepair.tcl` and
+  its output dir) with purpose, source, producing step, observed result, and
+  whether each is authoritative evidence or an intermediate artifact.
+- **`docs/PROJECT_SUMMARY.md`** — the README no longer references this filename
+  anywhere (checked directly: no match for `PROJECT_SUMMARY` in `README.md`).
+  The site footer (`index.html`) previously linked to it as a dangling
+  reference; that link has been repointed at `README.md`, which does exist.
+  This item is closed as **superseded, not fulfilled** — the gap was in a
+  stale link, not in a missing document the project actually needs.
+
+## Open / unresolved
 - **`LICENSE`** — the README states MIT and links `[LICENSE]`. No LICENSE file was
   in the upload. Not created here — adding real license text on someone's behalf
   isn't a file-organization task. Add the actual file before the README's link will
@@ -75,3 +84,66 @@ patched over or fabricated.
   RapidWright's bundled example checkpoint (device `xcku040-ffva1156-2-e`, unrelated
   to this project's gadget), used only to smoke-test that RapidWright could load
   UltraScale+ device data.
+
+## M5-specific provenance notes (new)
+
+- **The generated repair is functionally equivalent to the manual `share_separation_v2.xdc`,
+  not syntactically identical.** The generator emits exact-instance `NAME =~` filters
+  (e.g. `NAME =~ u_and_cross10/y_INST_0`) rather than the broader glob patterns
+  (`NAME =~ *cross10*`) the hand-written v2 XDC used. Confirmed by direct diff of
+  `generated_repair_v1.xdc` against `share_separation_v2.xdc`'s
+  `add_cells_to_pblock` lines. Deliberate generator design choice (reduces the
+  chance of an exact-instance constraint accidentally matching an unrelated
+  future cell), not an oversight.
+- **`cross10 -> sh0` is configuration-driven, not independently inferred.**
+  `generated_repair_v1_log.json` records the rule as `EXPLICIT_POLICY`, sourced
+  from `repair_policy.json`'s `SEPARATE_CROSS_TERMS` group
+  (`{"pattern": "*cross10*", "side": "sh0"}`), because `u_and_cross10/y_INST_0`
+  had no site-level evidence to lean on (alone at `SLICE_X59Y99` in the v1
+  checkpoint). A different policy file would produce a different, equally
+  "valid" assignment — do not cite this as a discovered geometric fact.
+- **Auto-repair inherited the original pblock coordinate warning.** Confirmed
+  directly in `vivado_1288.backup.log` (lines 55-56):
+  `[Place 30-8517]` (pblock_share0 range aligned to tile boundaries) and
+  `CRITICAL WARNING: [Place 30-8520] Ranges extend outside of device:
+  SLICE_X90Y99:SLICE_X60Y0` (pblock_share1's range, `SLICE_X60Y0:SLICE_X90Y99`,
+  carried unchanged from the original `share_separation.xdc`, exceeds
+  `xc7a100tcsg324-1`'s real bounds). Vivado auto-clipped and completed
+  placement/routing without error; this is a pre-existing property of the
+  original XDC's range choice, not something the M5 automation introduced.
+- **The final classifier result (0/0/0/0) is directly observed from the
+  reimplemented checkpoint**, not inferred from the generated XDC's contents.
+  `config_autorepair.txt` points `detect_classify.tcl` at
+  `./test3_place_route_autorepair_out/post_route.dcp` — the actual post-route
+  output of the from-scratch reimplementation — and `classify_autorepair.json`
+  is that run's direct output, not a copy or hand-edit of `classify_v2.json`.
+  (Diffed: `classify_autorepair.json` and `classify_v2.json` agree on every
+  cell/site/summary field but were produced by two separate classifier runs
+  against two separate checkpoints, per their differing `checkpoint` fields.)
+
+## Newly found during this pass: two stray, mangled debug-output files
+
+`security_tests/` contains two files whose names are the literal strings
+`*_sh1*` and `*cross01*`, with the `*` characters rendered as the private-use
+codepoint `U+F02A` (a common artifact of a Windows filesystem substituting an
+illegal filename character before a sync/copy step — these files most likely
+started life as a Tcl script accidentally using an unresolved glob pattern
+string, e.g. `$env(OUT)`, as a literal output filename rather than an actual
+glob).
+
+Each contains a JSON classifier output, but from a **different, narrower
+config** than any of the four real M5 runs — e.g. the `*_sh1*`-named file's
+embedded config has `"sh1_patterns": ["*_sh1*"]` and `"watch_patterns":
+["*_sh0*"]` only (missing `*cross01*`/`*cross10*` entirely), unlike
+`classify_v1.json`'s full four-pattern watch set. These do not match the
+config of `config_baseline.txt`/`config_v1.txt`/`config_v2.txt`/
+`config_autorepair.txt` and are not referenced by any `.tcl`, `.py`, or `.md`
+file in the repository.
+
+**Assessment: leftover debug/exploratory runs from before the config-file
+(`config_*.txt`) driven workflow was settled on, not part of the M5 evidence
+chain.** Not deleted here (this pass does not modify experimental outputs),
+not counted as Test A/B/C/autorepair evidence, and not folded into
+`results/INDEX.md`'s M5 artifact table. Flagged so a future pass either
+removes them or renames them to something that doesn't collide with shell
+glob expansion.
