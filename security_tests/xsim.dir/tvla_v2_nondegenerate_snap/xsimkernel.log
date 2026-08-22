@@ -1,0 +1,7 @@
+Running: xsim.dir/tvla_v2_nondegenerate_snap/xsimk.exe -runall -simmode gui -wdb tvla_v2_nondegenerate_snap.wdb -simrunnum 0 -socket 54334
+Design successfully loaded
+Design Loading Memory Usage: 29524 KB (Peak: 29524 KB)
+Design Loading CPU Usage: 92 ms
+Simulation completed
+Simulation Memory Usage: 30444 KB (Peak: 30444 KB)
+Simulation CPU Usage: 515 ms

@@ -1,0 +1,7 @@
+0.7
+2020.2
+Jun 16 2026
+11:10:11
+C:/vivado_work/milestone0/masked_and_gadget.v,1783145664,verilog,,C:/vivado_work/milestone0/security_tests/tb_tvla_v2_nondegenerate.v,,LUT2_and_cross01;LUT2_and_cross10;LUT2_and_sh0;LUT2_and_sh1;masked_and_gadget,,,,,,,,
+C:/vivado_work/milestone0/security_tests/tb_functional_exhaustive.v,1787236667,verilog,,,,tb_functional_exhaustive,,,,,,,,
+C:/vivado_work/milestone0/security_tests/tb_tvla_v2_nondegenerate.v,1787315066,verilog,,,,tb_tvla_v2_nondegenerate,,,,,,,,
