@@ -89,6 +89,14 @@
   .pstep.ok .pstat{color:var(--ok);} .pstep.fail .pstat{color:var(--danger);} .pstep.neutral .pstat{color:var(--share-a);}
   .arrow{display:flex; align-items:center; justify-content:center; color:var(--ink-faint); font-size:18px;}
 
+  /* tvla threshold gauge + two-lane status scene */
+  .tvla-wrap{max-width:820px; margin:0 auto;}
+  .tvla-wrap svg{display:block; width:100%; border-radius:14px; background:#040609; border:1px solid var(--line);}
+  .status-wrap{max-width:860px; margin:0 auto;}
+  .status-wrap svg{display:block; width:100%; border-radius:14px; background:#040609; border:1px solid var(--line);}
+  .loop-wrap{max-width:880px; margin:0 auto;}
+  .loop-wrap svg{display:block; width:100%; border-radius:14px; background:#040609; border:1px solid var(--line);}
+
   /* escalation bars */
   .chart-card{
     max-width:520px; margin:0 auto; background:var(--bg-card); border:1px solid var(--line);
@@ -276,17 +284,42 @@
       <div class="kicker"><span>06</span> · a separate chip, a separate question</div>
       <h2>Does the synthesized logic leak? A simulated proxy says: not yet, not here.</h2>
     </div>
-    <p class="caption" style="margin-bottom:26px;">This is a <b>different device and a different experiment line</b> from the XCZU2 routing work above — a conventionally-synthesized 2-share AND gadget on <b>XC7A100T (Artix-7)</b>, evaluated with simulated Welch's t-test (TVLA) leakage proxies, not the switchbox conflict analysis.</p>
-    <div class="figure reveal">
-      <div class="chart-card" style="max-width:640px;">
-        <div class="stat-row" style="border:none; margin-top:0;">
-          <div class="stat" style="background:transparent;"><div class="num o">1.240</div><div class="lbl">worst |t|, RTL simulation</div></div>
-          <div class="stat" style="background:transparent;"><div class="num o">1.280</div><div class="lbl">worst |t|, gate-level simulation</div></div>
-          <div class="stat" style="background:transparent;"><div class="num a">4.5</div><div class="lbl">TVLA threshold — not exceeded</div></div>
-        </div>
-      </div>
+    <p class="caption">A <b>different device, different experiment line</b> from the XCZU2 routing work above — a conventionally-synthesized 2-share AND gadget on <b>XC7A100T (Artix-7)</b>, read with simulated Welch's t-test (TVLA) leakage proxies.</p>
+    <div class="figure reveal tvla-wrap">
+      <svg viewBox="0 0 880 200" width="100%">
+        <defs>
+          <filter id="g4" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <rect width="880" height="200" fill="#040609"/>
+        <g stroke="#111d29" stroke-width="1"><path d="M0 50H880 M0 100H880 M0 150H880"/></g>
+
+        <!-- track: pass zone then fail zone -->
+        <line x1="60" y1="100" x2="615" y2="100" stroke="#123128" stroke-width="10" stroke-linecap="round"/>
+        <line x1="615" y1="100" x2="800" y2="100" stroke="#2a0a0e" stroke-width="10" stroke-linecap="round"/>
+        <text x="120" y="88" font-family="IBM Plex Mono" font-size="11" fill="#4f8f70">under threshold</text>
+        <text x="705" y="88" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#a85850">over threshold</text>
+
+        <!-- threshold line -->
+        <line x1="615" y1="52" x2="615" y2="148" stroke="#ff5a4d" stroke-width="2" stroke-dasharray="5 4">
+          <animate attributeName="opacity" values="1;0.35;1" dur="2.6s" repeatCount="indefinite"/>
+        </line>
+        <text x="615" y="40" text-anchor="middle" font-family="IBM Plex Mono" font-size="12" fill="#ff9b91" font-weight="600">threshold |t| = 4.5</text>
+
+        <!-- RTL marker: worst |t| = 1.240 -->
+        <line x1="213" y1="100" x2="213" y2="66" stroke="#35e0e8" stroke-width="1.5"/>
+        <circle cx="213" cy="100" r="7" fill="#35e0e8" filter="url(#g4)"/>
+        <text x="213" y="56" text-anchor="middle" font-family="IBM Plex Mono" font-size="12" fill="#35e0e8" font-weight="600">RTL · 1.240</text>
+
+        <!-- gate-level marker: worst |t| = 1.280 -->
+        <line x1="219" y1="100" x2="219" y2="134" stroke="#ff5fd6" stroke-width="1.5"/>
+        <circle cx="219" cy="100" r="7" fill="#ff5fd6" opacity="0.9"/>
+        <text x="219" y="150" text-anchor="middle" font-family="IBM Plex Mono" font-size="12" fill="#ff5fd6" font-weight="600">gate-level · 1.280</text>
+
+        <text x="60" y="180" font-family="IBM Plex Mono" font-size="11" fill="#5a7284">|t| = 0</text>
+        <text x="430" y="195" text-anchor="middle" font-family="IBM Plex Mono" font-size="10.5px" fill="#4a6070">worst-case simulated |t|, both builds — not a live time-domain trace</text>
+      </svg>
     </div>
-    <p class="caption">Both figures are <b>simulated TVLA proxies</b>, not physical FPGA power or EM measurements — no silicon was measured. A follow-on second-order (pairwise) TVLA pass is <b>currently on hold</b>: the stimulus construction used to test share pairs forces a same-variable correlation, which confounds the result before it can be read as a leakage finding.</p>
+    <p class="caption">Simulated proxies, not physical power/EM measurements — no silicon was measured. A follow-on second-order (pairwise) pass is <b>on hold</b>: the stimulus construction forces a same-variable correlation between shares, confounding the result.</p>
   </div>
 </section>
 
@@ -297,24 +330,127 @@
       <div class="kicker"><span>07</span> · what's actually established, right now</div>
       <h2>Structural evidence on routing. Simulated evidence on leakage. Not yet the same claim.</h2>
     </div>
-    <div class="figure reveal" style="max-width:760px; margin:0 auto; display:grid; gap:14px;">
-      <div style="background:var(--bg-card); border:1px solid var(--line); border-left:3px solid var(--ok); border-radius:10px; padding:16px 20px;">
-        <div style="font-family:var(--mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ok); margin-bottom:6px;">structural evidence — XCZU2 routing</div>
-        <div style="font-family:var(--mono); font-size:13.5px; color:var(--ink-dim); line-height:1.7;">Every avoidable cross-share switchbox conflict is closed (M3c, milestone chain M1 → M3 → M3b → M3c). Two conflicts remain, confirmed structural by two independent methods — this is routing-geometry evidence only, not a claim of physical leakage resistance.</div>
-      </div>
-      <div style="background:var(--bg-card); border:1px solid var(--line); border-left:3px solid var(--share-a); border-radius:10px; padding:16px 20px;">
-        <div style="font-family:var(--mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--share-a); margin-bottom:6px;">simulation evidence — XC7A100T TVLA</div>
-        <div style="font-family:var(--mono); font-size:13.5px; color:var(--ink-dim); line-height:1.7;">First-order TVLA proxies (RTL and gate-level) stay under threshold, on the separate M4 / TVLA experiment line — a different device and a different implementation from the XCZU2 routing result above.</div>
-      </div>
-      <div style="background:var(--bg-card); border:1px solid var(--line); border-left:3px solid var(--amber); border-radius:10px; padding:16px 20px;">
-        <div style="font-family:var(--mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--amber); margin-bottom:6px;">not yet linked</div>
-        <div style="font-family:var(--mono); font-size:13.5px; color:var(--ink-dim); line-height:1.7;">Same-lineage leakage validation of the XCZU2 M3c implementation is not currently established — the routing result and the TVLA result speak to two different builds, and are never combined into one statistic.</div>
-      </div>
-      <div style="background:var(--bg-card); border:1px solid var(--line); border-left:3px solid var(--danger); border-radius:10px; padding:16px 20px;">
-        <div style="font-family:var(--mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--danger); margin-bottom:6px;">on hold / not established</div>
-        <div style="font-family:var(--mono); font-size:13.5px; color:var(--ink-dim); line-height:1.7;">Genuine second-order TVLA validation is on hold — the current stimulus construction confounds same-variable share pairs. No physical power/EM measurement has been performed on any device.</div>
-      </div>
+    <div class="figure reveal status-wrap">
+      <svg viewBox="0 0 880 260" width="100%">
+        <defs>
+          <filter id="g5" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <rect width="880" height="260" fill="#040609"/>
+        <g stroke="#111d29" stroke-width="1"><path d="M0 40H880 M0 90H880 M0 140H880 M0 190H880 M0 230H880"/></g>
+
+        <!-- lane 1: XCZU2 routing -->
+        <text x="50" y="55" font-family="IBM Plex Mono" font-size="12" fill="#35e0e8" font-weight="600">XCZU2 — routing / physical isolation</text>
+        <line x1="50" y1="90" x2="760" y2="90" stroke="#233242" stroke-width="8" stroke-linecap="round"/>
+        <line x1="50" y1="90" x2="760" y2="90" stroke="#35e0e8" stroke-width="2" stroke-dasharray="8 6" opacity="0.5"/>
+        <circle cx="180" cy="90" r="5" fill="#4a6070"/><text x="180" y="112" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#5a7284">M1</text>
+        <circle cx="360" cy="90" r="5" fill="#ff5a4d"/><text x="360" y="112" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#5a7284">M3 / M3b</text>
+        <circle cx="540" cy="90" r="7" fill="#7bffb0" filter="url(#g5)"/><text x="540" y="112" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#5a7284">M3c</text>
+        <path d="M745 82 L757 90 L745 98" stroke="#7bffb0" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" transform="translate(6,0)"/>
+        <text x="700" y="72" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#7bffb0" font-weight="600">structural</text>
+
+        <!-- lane 2: XC7A100T TVLA -->
+        <text x="50" y="175" font-family="IBM Plex Mono" font-size="12" fill="#ff5fd6" font-weight="600">XC7A100T — synthesized logic / TVLA proxy</text>
+        <line x1="50" y1="190" x2="760" y2="190" stroke="#233242" stroke-width="8" stroke-linecap="round"/>
+        <line x1="50" y1="190" x2="760" y2="190" stroke="#ff5fd6" stroke-width="2" stroke-dasharray="8 6" opacity="0.5"/>
+        <circle cx="400" cy="190" r="7" fill="#7bffb0" filter="url(#g5)"/><text x="400" y="212" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#5a7284">|t| under 4.5</text>
+        <path d="M745 182 L757 190 L745 198" stroke="#7bffb0" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" transform="translate(6,0)"/>
+        <text x="700" y="172" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#7bffb0" font-weight="600">simulated</text>
+
+        <!-- not-linked connector between the two lane endpoints -->
+        <line x1="800" y1="90" x2="800" y2="190" stroke="#ff5a4d" stroke-width="2" stroke-dasharray="5 4">
+          <animate attributeName="opacity" values="1;0.3;1" dur="2.2s" repeatCount="indefinite"/>
+        </line>
+        <line x1="793" y1="133" x2="807" y2="147" stroke="#ff5a4d" stroke-width="3" stroke-linecap="round"/>
+        <line x1="807" y1="133" x2="793" y2="147" stroke="#ff5a4d" stroke-width="3" stroke-linecap="round"/>
+        <text x="820" y="144" font-family="IBM Plex Mono" font-size="10.5px" fill="#ff9b91">not one claim (yet)</text>
+
+        <!-- side branch: second-order TVLA on hold -->
+        <path d="M470 190 Q470 225 520 225 H620" stroke="#4a6070" stroke-width="1.5" fill="none" stroke-dasharray="4 4"/>
+        <rect x="628" y="212" width="10" height="26" rx="2" fill="#ff5a4d"/>
+        <rect x="644" y="212" width="10" height="26" rx="2" fill="#ff5a4d"/>
+        <text x="666" y="229" font-family="IBM Plex Mono" font-size="10.5px" fill="#ff9b91">2nd-order TVLA — on hold (stimulus confound)</text>
+      </svg>
     </div>
+    <p class="caption">Two lanes, two separate builds — <b>not yet merged into one claim</b>. Structural routing evidence on the XCZU2 side; simulated leakage evidence on the XC7A100T side. No physical power/EM measurement exists on either.</p>
+  </div>
+</section>
+
+<!-- 8. M5 CLOSED LOOP -->
+<section class="dark-band" id="s8">
+  <div class="wrap">
+    <div class="scene-head reveal">
+      <div class="kicker"><span>08</span> · closing the loop</div>
+      <h2>Detect. Classify. Generate a fix. Re-implement. Check again — with the same classifier.</h2>
+    </div>
+    <p class="caption" style="margin-bottom:20px;">Constraint Repair v1 was hand-run once. <b>M5</b> automates the whole loop and validates it by re-implementing from scratch, not by checking the generated file looks right.</p>
+    <div class="figure reveal loop-wrap">
+      <svg viewBox="0 0 880 560" width="100%">
+        <defs>
+          <filter id="g6" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <marker id="ah" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4a6070"/></marker>
+          <marker id="ah2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4a6070"/></marker>
+        </defs>
+        <rect width="880" height="560" fill="#040609"/>
+        <g stroke="#0e1620" stroke-width="1"><path d="M0 130H880 M0 300H880 M0 470H880"/></g>
+
+        <!-- top row -->
+        <rect x="50" y="50" width="210" height="60" rx="10" fill="#0a0e17" stroke="#35e0e8" stroke-width="1.5"/>
+        <text x="155" y="85" text-anchor="middle" font-family="IBM Plex Mono" font-size="12.5" fill="#eafcff" font-weight="600">INPUT CHECKPOINT</text>
+
+        <rect x="340" y="50" width="200" height="60" rx="10" fill="#0a0e17" stroke="#35e0e8" stroke-width="1.5"/>
+        <text x="440" y="78" text-anchor="middle" font-family="IBM Plex Mono" font-size="12.5" fill="#eafcff" font-weight="600">DETECT +</text>
+        <text x="440" y="94" text-anchor="middle" font-family="IBM Plex Mono" font-size="12.5" fill="#eafcff" font-weight="600">CLASSIFY</text>
+
+        <rect x="620" y="50" width="210" height="60" rx="10" fill="#0a0e17" stroke="#7bffb0" stroke-width="1.5"/>
+        <text x="725" y="85" text-anchor="middle" font-family="IBM Plex Mono" font-size="12.5" fill="#eafcff" font-weight="600">GENERATE REPAIR</text>
+
+        <path d="M260 80 H335" stroke="#4a6070" stroke-width="2" marker-end="url(#ah)"/>
+        <path d="M545 80 H615" stroke="#4a6070" stroke-width="2" marker-end="url(#ah)"/>
+
+        <!-- right connector down -->
+        <path d="M725 110 V395" stroke="#4a6070" stroke-width="2" marker-end="url(#ah2)"/>
+
+        <!-- bottom row (right to left) -->
+        <rect x="620" y="400" width="210" height="60" rx="10" fill="#0a0e17" stroke="#ffb648" stroke-width="1.5"/>
+        <text x="725" y="435" text-anchor="middle" font-family="IBM Plex Mono" font-size="12.5" fill="#eafcff" font-weight="600">APPLY GENERATED XDC</text>
+
+        <rect x="340" y="400" width="200" height="60" rx="10" fill="#0a0e17" stroke="#ffb648" stroke-width="1.5"/>
+        <text x="440" y="435" text-anchor="middle" font-family="IBM Plex Mono" font-size="12.5" fill="#eafcff" font-weight="600">RE-IMPLEMENT</text>
+
+        <rect x="50" y="400" width="210" height="60" rx="10" fill="#0a0e17" stroke="#7bffb0" stroke-width="1.5"/>
+        <text x="155" y="428" text-anchor="middle" font-family="IBM Plex Mono" font-size="12" fill="#eafcff" font-weight="600">RE-VERIFY</text>
+        <text x="155" y="444" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#7bffb0">same frozen classifier</text>
+
+        <path d="M615 430 H545" stroke="#4a6070" stroke-width="2" marker-end="url(#ah)"/>
+        <path d="M335 430 H265" stroke="#4a6070" stroke-width="2" marker-end="url(#ah)"/>
+
+        <!-- left connector up, closing the loop -->
+        <path d="M155 395 V115" stroke="#4a6070" stroke-width="2" marker-end="url(#ah2)"/>
+
+        <!-- center result -->
+        <text x="440" y="245" text-anchor="middle" font-family="IBM Plex Mono" font-size="34" font-weight="700" fill="#7bffb0" filter="url(#g6)">
+          0 / 0 / 0 / 0
+          <animate attributeName="opacity" values="1;0.75;1" dur="2.6s" repeatCount="indefinite"/>
+        </text>
+        <text x="440" y="272" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#8fb0a0">MIXED · UNCLASSIFIED_PRESENT · UNCLASSIFIED_ONLY · unclassified cells</text>
+        <text x="440" y="290" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#5a7284">confirmed by RE-VERIFY, after full re-implementation — not a syntax check on the XDC</text>
+
+        <!-- validated tests, branching from GENERATE REPAIR -->
+        <path d="M725 110 V150 Q725 165 700 165 H155 Q130 165 130 180 V395" stroke="#3a5060" stroke-width="1" stroke-dasharray="3 4" fill="none" opacity="0.5"/>
+        <rect x="50" y="495" width="230" height="52" rx="8" fill="none" stroke="#ff5a4d" stroke-width="1.2"/>
+        <text x="165" y="516" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#ff9b91" font-weight="600">TEST A · baseline</text>
+        <text x="165" y="533" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#8a9aa5">0 assignments — refused, escalated</text>
+
+        <rect x="325" y="495" width="230" height="52" rx="8" fill="none" stroke="#7bffb0" stroke-width="1.2"/>
+        <text x="440" y="516" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#7bffb0" font-weight="600">TEST B · v1 broken</text>
+        <text x="440" y="533" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#8a9aa5">2 assignments — traceable in the log</text>
+
+        <rect x="600" y="495" width="230" height="52" rx="8" fill="none" stroke="#35e0e8" stroke-width="1.2"/>
+        <text x="715" y="516" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#35e0e8" font-weight="600">TEST C · v2 clean</text>
+        <text x="715" y="533" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#8a9aa5">0 assignments — explicit no-op</text>
+      </svg>
+    </div>
+    <p class="caption">The generated repair is <b>functionally equivalent</b> to the hand-written v2 XDC, not syntactically identical — it emits exact-instance filters instead of the manual XDC's broader glob patterns. The `cross10 → sh0` assignment specifically is a <b>configured policy decision</b> (`repair_policy.json`), not something derived independently from geometry. Validated on <b>one design, one conflict scenario</b> — generalization to other designs or conflict shapes is not demonstrated, and `MIXED_SITE_CONFLICT` sites are refused by design, not silently guessed at.</p>
   </div>
 </section>
 
@@ -325,7 +461,7 @@
     <div class="meta">
       Krss — B.E. ECE, Sathyabama Institute of Science and Technology, Chennai · Research guidance: Dr. G. Rajalakshmi<br>
       Vivado / RapidWright 2026.1 · Java 24 · Python 3.13<br>
-      <a href="https://github.com/krss-94/physical-separation-verification">Repository</a> · Full write-up — <a href="docs/PROJECT_SUMMARY.md">docs/PROJECT_SUMMARY.md</a> · MIT License
+      <a href="https://github.com/krss-94/physical-separation-verification">Repository</a> · Full write-up — <a href="README.md">README.md</a> · MIT License
     </div>
   </div>
 </footer>
