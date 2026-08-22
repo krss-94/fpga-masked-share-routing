@@ -1,1 +1,0 @@
---relax -debug "typical" "tb_gatelevel_tvla_sdf" "glbl" -s "gatelevel_tvla_sdf_v4" -L "simprims_ver" -L "secureip" 
