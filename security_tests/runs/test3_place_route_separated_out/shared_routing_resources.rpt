@@ -1,0 +1,6 @@
+net_share0,net_share1,shared_tile_count,shared_tiles
+a_sh0_r,a_sh1_r,0,
+b_sh0_r,b_sh1_r,0,
+t0_sh0_reg,t0_sh1_reg,0,
+q_sh0_reg,q_sh1_reg,0,
+term_sh0,term_sh1,0,

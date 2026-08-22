@@ -1,0 +1,28 @@
+{
+  "classifier_input": "classify_v1.json",
+  "policy_input": "repair_policy.json",
+  "mixed_site_conflict_count": 0,
+  "assignments_generated": 2,
+  "entries": [
+    {
+      "cell": "u_and_cross01/y_INST_0",
+      "site": "SLICE_X60Y99",
+      "classification": "UNCLASSIFIED_CELL_PRESENT",
+      "assigned_side": "sh1",
+      "rule": "SITE_UNANIMOUS_INFERENCE",
+      "action": "ADD_CELLS_TO_PBLOCK",
+      "target_pblock": "pblock_share1",
+      "reason": "Site SLICE_X60Y99 contains only sh1-classified cells alongside this unclassified cell; inferred by unanimous site membership, no policy needed."
+    },
+    {
+      "cell": "u_and_cross10/y_INST_0",
+      "site": "SLICE_X59Y99",
+      "classification": "UNCLASSIFIED_ONLY",
+      "assigned_side": "sh0",
+      "rule": "EXPLICIT_POLICY",
+      "action": "ADD_CELLS_TO_PBLOCK",
+      "target_pblock": "pblock_share0",
+      "reason": "No site-level evidence (cell is alone at SLICE_X59Y99). Resolved via configured policy 'SEPARATE_CROSS_TERMS': pattern '*cross10*' -> sh0."
+    }
+  ]
+}

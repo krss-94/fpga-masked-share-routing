@@ -1,0 +1,13 @@
+{
+  "pblocks": {
+    "sh0": "pblock_share0",
+    "sh1": "pblock_share1"
+  },
+  "unclassified_only_policy": {
+    "type": "SEPARATE_CROSS_TERMS",
+    "groups": [
+      {"pattern": "*cross01*", "side": "sh1"},
+      {"pattern": "*cross10*", "side": "sh0"}
+    ]
+  }
+}

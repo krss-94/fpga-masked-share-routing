@@ -1,0 +1,7 @@
+{
+  "classifier_input": "classify_v2.json",
+  "policy_input": "repair_policy.json",
+  "mixed_site_conflict_count": 0,
+  "assignments_generated": 0,
+  "entries": []
+}

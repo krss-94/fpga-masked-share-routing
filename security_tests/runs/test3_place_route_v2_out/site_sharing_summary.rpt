@@ -1,0 +1,3 @@
+site,occupants
+SLICE_X60Y99,a_sh1_r:a_sh1_r_reg:SLICEM.A5FF  |  b_sh1_r:b_sh1_r_reg:SLICEM.BFF  |  t0_sh1_reg:t0_sh1_reg:SLICEM.AFF  |  q_sh1_reg:q_sh1_reg_reg:SLICEM.CFF  |  u_and_cross01:u_and_cross01/y_INST_0:SLICEM.B5LUT
+SLICE_X31Y99,a_sh0_r:a_sh0_r_reg:SLICEL.A5FF  |  b_sh0_r:b_sh0_r_reg:SLICEL.BFF  |  t0_sh0_reg:t0_sh0_reg:SLICEL.AFF  |  q_sh0_reg:q_sh0_reg_reg:SLICEL.CFF  |  u_and_cross10:u_and_cross10/y_INST_0:SLICEL.B6LUT

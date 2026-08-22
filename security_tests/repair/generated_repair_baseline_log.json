@@ -1,0 +1,98 @@
+{
+  "classifier_input": "classify_baseline.json",
+  "policy_input": "repair_policy.json",
+  "mixed_site_conflict_count": 1,
+  "assignments_generated": 0,
+  "entries": [
+    {
+      "cell": "a_sh1_r_reg",
+      "site": "SLICE_X52Y100",
+      "classification": "MIXED_SITE_CONFLICT",
+      "assigned_side": null,
+      "rule": "NONE",
+      "action": "NONE_UNSUPPORTED",
+      "reason": "Site contains both sh0- and sh1-classified cells. This is a placement collision, not a coverage gap -- requires manual review, not an automated pblock-membership addition."
+    },
+    {
+      "cell": "b_sh0_r_reg",
+      "site": "SLICE_X52Y100",
+      "classification": "MIXED_SITE_CONFLICT",
+      "assigned_side": null,
+      "rule": "NONE",
+      "action": "NONE_UNSUPPORTED",
+      "reason": "Site contains both sh0- and sh1-classified cells. This is a placement collision, not a coverage gap -- requires manual review, not an automated pblock-membership addition."
+    },
+    {
+      "cell": "b_sh1_r_reg",
+      "site": "SLICE_X52Y100",
+      "classification": "MIXED_SITE_CONFLICT",
+      "assigned_side": null,
+      "rule": "NONE",
+      "action": "NONE_UNSUPPORTED",
+      "reason": "Site contains both sh0- and sh1-classified cells. This is a placement collision, not a coverage gap -- requires manual review, not an automated pblock-membership addition."
+    },
+    {
+      "cell": "q_sh1_reg_reg",
+      "site": "SLICE_X52Y100",
+      "classification": "MIXED_SITE_CONFLICT",
+      "assigned_side": null,
+      "rule": "NONE",
+      "action": "NONE_UNSUPPORTED",
+      "reason": "Site contains both sh0- and sh1-classified cells. This is a placement collision, not a coverage gap -- requires manual review, not an automated pblock-membership addition."
+    },
+    {
+      "cell": "t0_sh1_i_1",
+      "site": "SLICE_X52Y100",
+      "classification": "MIXED_SITE_CONFLICT",
+      "assigned_side": null,
+      "rule": "NONE",
+      "action": "NONE_UNSUPPORTED",
+      "reason": "Site contains both sh0- and sh1-classified cells. This is a placement collision, not a coverage gap -- requires manual review, not an automated pblock-membership addition."
+    },
+    {
+      "cell": "t0_sh1_reg",
+      "site": "SLICE_X52Y100",
+      "classification": "MIXED_SITE_CONFLICT",
+      "assigned_side": null,
+      "rule": "NONE",
+      "action": "NONE_UNSUPPORTED",
+      "reason": "Site contains both sh0- and sh1-classified cells. This is a placement collision, not a coverage gap -- requires manual review, not an automated pblock-membership addition."
+    },
+    {
+      "cell": "u_and_cross01/y_INST_0",
+      "site": "SLICE_X52Y100",
+      "classification": "MIXED_SITE_CONFLICT",
+      "assigned_side": null,
+      "rule": "NONE",
+      "action": "NONE_UNSUPPORTED",
+      "reason": "Site contains both sh0- and sh1-classified cells. This is a placement collision, not a coverage gap -- requires manual review, not an automated pblock-membership addition."
+    },
+    {
+      "cell": "u_and_cross10/y_INST_0",
+      "site": "SLICE_X52Y100",
+      "classification": "MIXED_SITE_CONFLICT",
+      "assigned_side": null,
+      "rule": "NONE",
+      "action": "NONE_UNSUPPORTED",
+      "reason": "Site contains both sh0- and sh1-classified cells. This is a placement collision, not a coverage gap -- requires manual review, not an automated pblock-membership addition."
+    },
+    {
+      "cell": "u_and_sh0/y_INST_0",
+      "site": "SLICE_X52Y100",
+      "classification": "MIXED_SITE_CONFLICT",
+      "assigned_side": null,
+      "rule": "NONE",
+      "action": "NONE_UNSUPPORTED",
+      "reason": "Site contains both sh0- and sh1-classified cells. This is a placement collision, not a coverage gap -- requires manual review, not an automated pblock-membership addition."
+    },
+    {
+      "cell": "u_and_sh1/y_INST_0",
+      "site": "SLICE_X52Y100",
+      "classification": "MIXED_SITE_CONFLICT",
+      "assigned_side": null,
+      "rule": "NONE",
+      "action": "NONE_UNSUPPORTED",
+      "reason": "Site contains both sh0- and sh1-classified cells. This is a placement collision, not a coverage gap -- requires manual review, not an automated pblock-membership addition."
+    }
+  ]
+}

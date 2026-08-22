@@ -1,0 +1,15 @@
+===== SITE SLICE_X60Y99 =====
+  cell: a_sh1_r_reg  bel: SLICEM.A5FF  ref_name: FDRE
+  cell: u_and_sh1/y_INST_0  bel: SLICEM.C6LUT  ref_name: LUT2
+  cell: u_and_cross01/y_INST_0  bel: SLICEM.B6LUT  ref_name: LUT2
+  cell: t0_sh1_i_1  bel: SLICEM.A6LUT  ref_name: LUT4
+  cell: q_sh1_reg_reg  bel: SLICEM.CFF  ref_name: FDRE
+  cell: b_sh1_r_reg  bel: SLICEM.BFF  ref_name: FDRE
+  cell: t0_sh1_reg  bel: SLICEM.AFF  ref_name: FDRE
+===== SITE SLICE_X31Y99 =====
+  cell: a_sh0_r_reg  bel: SLICEL.A5FF  ref_name: FDRE
+  cell: u_and_sh0/y_INST_0  bel: SLICEL.B6LUT  ref_name: LUT2
+  cell: t0_sh0_i_1  bel: SLICEL.A6LUT  ref_name: LUT2
+  cell: q_sh0_reg_reg  bel: SLICEL.CFF  ref_name: FDRE
+  cell: b_sh0_r_reg  bel: SLICEL.BFF  ref_name: FDRE
+  cell: t0_sh0_reg  bel: SLICEL.AFF  ref_name: FDRE

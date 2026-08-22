@@ -1,0 +1,5 @@
+pair_share0,pair_share1,loc_share0,loc_share1,manhattan_distance_tiles
+a_sh0_r,a_sh1_r,SLICE_X31Y99,SLICE_X60Y99,29
+b_sh0_r,b_sh1_r,SLICE_X31Y99,SLICE_X60Y99,29
+t0_sh0_reg,t0_sh1_reg,SLICE_X31Y99,SLICE_X60Y99,29
+q_sh0_reg,q_sh1_reg,SLICE_X31Y99,SLICE_X60Y99,29
