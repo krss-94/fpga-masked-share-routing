@@ -1,7 +1,0 @@
-Running: xsim.dir/gatelevel_tvla_sdf_v4/xsimk.exe -runall -simmode gui -wdb gatelevel_tvla_sdf_v4.wdb -simrunnum 0 -socket 61560
-Design successfully loaded
-Design Loading Memory Usage: 29736 KB (Peak: 29736 KB)
-Design Loading CPU Usage: 155 ms
-Simulation completed
-Simulation Memory Usage: 30884 KB (Peak: 30884 KB)
-Simulation CPU Usage: 1406 ms
