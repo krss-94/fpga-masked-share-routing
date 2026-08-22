@@ -75,12 +75,26 @@ diff structurally cannot see them. TEST 4 inspects those mechanisms directly ins
 The five reports are the result; no single pass/fail statistic is computed at this
 stage — read the reports themselves for findings.
 
-## SDF / timing-annotated TVLA: operationally blocked, no statistic produced
+## SDF / timing-annotated TVLA: blocked at the time of M4 (historical) — later resolved by TEST 7
 
-**Two independent attempts** to run TVLA on a timing-annotated (SDF-backed) gate-level
-simulation were made. Neither produced a leakage statistic. Both are preserved as
-diagnostic/blocker evidence in `results/m4_tvla/diagnostics_sdf_blocked/`, split by
-attempt:
+> **This section describes the original M4 investigation and is historical.**
+> At the time M4 was run, SDF-annotated TVLA was operationally blocked and no
+> statistic was produced, for the reasons documented below. It was
+> **subsequently resolved** by a separate, later investigation
+> (`security_tests/TEST 7`, see the top-level README's Security Test Suite
+> table and `security_tests/NOTE_sdf_simprims_requirement.md`), which
+> identified the missing-library root cause and produced a working SDF TVLA
+> run: HW worst \|t\| = 1.280, HD worst \|t\| = 2.270, both under the 4.5
+> threshold. TEST 7 is a separate run on the separate `xc7a100t` lineage
+> `security_tests` uses (see the top-level README) — it does not retroactively
+> change what M4 itself produced or ran; it closes the specific gap M4 left
+> open. The diagnostic content below is kept as-written for the record, not
+> rewritten to look like TEST 7 produced it.
+
+**Two independent attempts**, made *during M4*, to run TVLA on a timing-annotated
+(SDF-backed) gate-level simulation. Neither produced a leakage statistic at the
+time. Both are preserved as diagnostic/blocker evidence in
+`results/m4_tvla/diagnostics_sdf_blocked/`, split by attempt:
 
 - **`attempt1_tvla_timing_project/`** — a dedicated Vivado sim project
   (`tvla_timing`) targeting the SDF-backed netlist. Elaboration failed before
@@ -93,10 +107,25 @@ attempt:
   repeated `Unable to find delay expressions for setup/hold` and `pathpulse limits`
   warnings for `FDRE_default`, `LUT2`, and `LUT4` instances.
 
-**Do not read these as "SDF was clean" or as a leakage result of any kind.** No
-timing-annotated TVLA statistic exists for this project. The no-SDF gate-level result
-(max |t| = 1.280, above) is the closest available evidence and is explicitly a
-behavioral, non-timing-accurate proxy.
+**At the time, do not read these as "SDF was clean" or as a leakage result of any
+kind.** No timing-annotated TVLA statistic existed yet. The no-SDF gate-level result
+(max |t| = 1.280, above) was the closest available evidence at that point and was
+explicitly a behavioral, non-timing-accurate proxy.
+
+**Root cause, identified later (TEST 7):** both M4 attempts linked against
+`unisims_ver`/`unifast_ver` — behavioral/functional simulation libraries with no
+`specify` timing-check blocks for SDF back-annotation. `simprims_ver` is the
+library Vivado's own `launch_simulation -mode post-implementation -type timing`
+uses for exactly this case. Swapping the link libraries
+(`-L simprims_ver -L secureip` in place of
+`-L unisims_ver -L unifast_ver -L secureip`) resolved SDF back-annotation
+cleanly — confirmed working, `$finish` reached, no errors. Full diagnostic
+detail: `security_tests/NOTE_sdf_simprims_requirement.md`. The
+`xil_defaultlib.glbl` elaboration failure seen in one M4 attempt
+(`attempt1_tvla_timing_project/`) was a separate, unrelated issue (missing
+implementation-run context for project-mode `glbl.v` auto-discovery), not the
+SDF annotation cause — do not conflate the two when reading the original
+attempt logs.
 
 ## What M4 does and does not establish
 
